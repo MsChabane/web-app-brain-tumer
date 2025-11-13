@@ -1,7 +1,7 @@
 from sqlmodel import Field,SQLModel,Relationship
 import uuid
 from typing import Optional,TYPE_CHECKING,List
-from ..schemas.common import Role
+from ..schemas.types import Role
 
 if TYPE_CHECKING:
     from .PatientModel import Patient

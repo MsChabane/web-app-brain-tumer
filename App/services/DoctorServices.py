@@ -21,9 +21,8 @@ class DoctorServices:
         doctor = await session.get(Doctor, doctor_id)
         return doctor 
     async def get_with_patients(self,doctor_id:str,session:AsyncSession):
-        statement =select(Doctor).where(Doctor.id == doctor_id).options(selectinload(Doctor.patients))
-        result =await session.exec(statement)
-        return result.one_or_none()
+        doctor =await session.get(Doctor, doctor_id,populate_existing=True)
+        return doctor
         
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):

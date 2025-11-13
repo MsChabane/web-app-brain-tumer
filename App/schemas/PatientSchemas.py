@@ -1,18 +1,36 @@
 from pydantic import BaseModel,Field
 from uuid import UUID
-from App.schemas.common import Gender,FinalStateEnum,Binary,Four_Classes
+from .types import Gender,Four_Classes,Binary,FinalStateEnum
+from typing import Optional,TYPE_CHECKING
+
+
+    
 
 class PatientBase(BaseModel):
     name: str = Field(max_length=100)
     surname: str = Field(max_length=100)
     age: int =Field()
     gender: Gender =Field()
+    antecedents: Four_Classes
+    
+   
 
 class PatientCreate(PatientBase):
     user_id:UUID
     
+class PatientUpdateStatus(BaseModel):
+    tumor_status: Binary
+    hospitalisation: Four_Classes
+    final_state: FinalStateEnum
     
+class PatientUpdate(BaseModel):
+    name: Optional[str] =None
+    surname: Optional[str] =None
+    age: Optional[int]=None 
+    gender: Optional[Gender] =None
+    antecedents: Optional[Four_Classes]=None
     
+
     
 
     

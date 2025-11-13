@@ -5,7 +5,8 @@ from ..services.DoctorServices import DoctorServices
 from ..services.UserServices import UserServices
 from ..schemas.UserSchemas import UserCreate
 from ..schemas.DoctorSchemas import DoctorCreate
-from ..schemas.common import NewDoctor,Role
+from ..schemas.common import NewDoctor
+from ..schemas.types import Role
 from uuid import UUID
 from ..dependancies.common import db_dependency
 from typing import Optional,List

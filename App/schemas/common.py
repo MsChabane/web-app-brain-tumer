@@ -1,45 +1,19 @@
 from pydantic import BaseModel
 from .DoctorSchemas import DoctorBase
 from enum import Enum
+from .PatientSchemas import PatientBase
+from .GeneralSymptomsSchemas import GeneralSymptomsBase
+from .SpecificSymptomsSchemas import SpecificSymptomsBase
 
 class NewDoctor(BaseModel):
     doctor:DoctorBase
     phone_number:str
-
-class Role(str, Enum):
-    ADMIN = "admin"
-    DOCTOR = "doctor"
-    PATIENT = "patient"
-
-class FinalStateEnum(str, Enum):
-    T = "T"
-    D = "D"
-    R = "R"
-    N = "N"
     
-class Gender(str,Enum):
-    M='M'
-    F='F'
+class NewPatient(BaseModel):
+    phone_number:str
+    patient_info: PatientBase
+    general_sympotoms:GeneralSymptomsBase
+    specific_symptoms:SpecificSymptomsBase
 
-class Binary(int,Enum):
-    ZERO = 0
-    ONE = 1
 
-class Three_Classes(int,Enum):
-    ZERO = 0
-    ONE = 1
-    TWO = 2
 
-class Four_Classes(int,Enum):
-    ZERO = 0
-    ONE = 1
-    TWO = 2
-    THREE = 3
-    
-    
-class Seizures(str,Enum):
-    M='M'
-    TC="TC"
-    S="S"
-    C='C'
-    

@@ -1,9 +1,8 @@
 from fastapi import APIRouter,HTTPException,status
 from ..dependancies.common import db_dependency
-from ..models.UserModel import User 
 from ..schemas.UserSchemas import UserLogin
 from ..services.UserServices import UserServices
-from sqlmodel import select
+
 from ..utils import create_token,checkpwd
 
 

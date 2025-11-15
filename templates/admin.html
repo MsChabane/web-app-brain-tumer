@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Doctors Page</title>
+    <!-- <link rel="stylesheet" href="../static/css/admin.css">
+    <link rel="stylesheet" href='../static/css/notification.css'> -->
+    <link rel="stylesheet" href="{{ url_for('static', path = 'css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path = 'css/notification.css') }}">
+</head>
+
+<body>
+
+    <div class="notifications" id="notifications"></div>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <button onclick="showTab('patients')">Patients</button>
+        <button onclick="showTab('doctors')">Doctors</button>
+    </div>
+
+
+    <div class="main">
+
+
+        <div id="doctors" class="tab-content">
+            <div class="header">
+                <h2>Doctors</h2>
+                <button onclick="openDoctorModal()">Add Doctor</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Speciality</th>
+                        <th>Experience</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody id="doctorTable">
+                    <!-- Dummy sample data -->
+                    <tr>
+                        <td>Dr. Karim</td>
+                        <td>Cardiology</td>
+                        <td>12 years</td>
+                        <td>0555 120 450</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Patients TAB (Empty for now) -->
+        <div id="patients" class="tab-content" style="display:none;">
+            <div class="header">
+                <h2>Patients</h2>
+                <button>Add Patient</button>
+            </div>
+
+            <p>Patients table will go here.</p>
+        </div>
+
+    </div>
+
+
+    <!-- ===== Doctor Modal Dialog ===== -->
+    <div class="modal-overlay" id="doctorModal">
+        <div class="modal">
+            <h3>Create Doctor</h3>
+
+            <input type="text" id="docName" placeholder="Full Name">
+            <input type="text" id="docSpeciality" placeholder="Speciality">
+            <input type="number" id="docExperience" placeholder="Years of Experience">
+            <input type="text" id="docPhone" placeholder="Phone Number">
+
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeDoctorModal()">Cancel</button>
+                <button class="save-btn" onclick="saveDoctor()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path = 'js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path = 'js/admin.js') }}"></script>
+    <!-- <script src='../static/js/notification.js'></script>
+    <script src='../static/js/admin.js'></script> -->
+
+
+
+</body>
+
+</html>

@@ -11,8 +11,7 @@ class GeneralSymptomsBase(BaseModel):
     sleep_pb: Three_Classes
     memory_pb: Three_Classes
    
-    class Config:
-        from_attributes = True
+    
     
     
     

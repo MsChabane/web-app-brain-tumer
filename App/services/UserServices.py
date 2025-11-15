@@ -25,7 +25,7 @@ class UserServices:
     async def check_user_exist(self,phone_number:str,session:AsyncSession):
         return (await self.get_by_phone_number(phone_number,session)) is not None
     
-    async def add( self,user_data:UserCreate,session:AsyncSession):
+    def add( self,user_data:UserCreate,session:AsyncSession):
         user_data.password=hash(user_data.password)
         user =User(**(user_data.model_dump()))
         session.add(user)

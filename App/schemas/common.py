@@ -5,16 +5,17 @@ from .PatientSchemas import PatientBase
 from .GeneralSymptomsSchemas import GeneralSymptomsBase
 from .SpecificSymptomsSchemas import SpecificSymptomsBase
 from .RadioImageSchemas import RadioImageBase
+from .UserSchemas import UserBase
 
 
 class NewDoctor(BaseModel):
     doctor:DoctorBase
-    phone_number:str
+    user:UserBase
     
     
 class NewPatient(BaseModel):
-    phone_number:str
-    patient_info: PatientBase
+    user:UserBase
+    patient: PatientBase
     
 class LatestSymptoms(BaseModel):
     

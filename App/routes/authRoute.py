@@ -15,7 +15,6 @@ router =APIRouter()
 user_services=UserServices()
 
 
-
 @router.post("/login",response_model=Token)
 async def login(data:UserLogin,session:db_dependency):
     user = await user_services.get_by_phone_number(data.phone_number,session)
@@ -36,7 +35,7 @@ async def signup_admins(data:UserBase,session:db_dependency) :
             detail='user is already exist',status_code=400
         )
     
-    user=await user_services.add(UserCreate(**data.model_dump(),role=Role.ADMIN),session)
+    user= user_services.add(UserCreate(**data.model_dump(),role=Role.ADMIN),session)
     await session.commit()
     return ""
 

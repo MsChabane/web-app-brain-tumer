@@ -10,7 +10,7 @@ from ..schemas.UserSchemas import UserCreate
 from ..schemas.DoctorSchemas import DoctorCreate
 from ..schemas.common import NewDoctor
 from ..schemas.types import Role
-from ..schemas.PatientSchemas import PatientUpdateStatus
+from ..schemas.PatientSchemas import PatientUpdateStatus,PatientOut
 from uuid import UUID
 from ..dependancies.common import db_dependency
 from typing import Optional,List
@@ -23,22 +23,18 @@ user_services=UserServices()
 doctor_services=DoctorServices()
 patient_services=PatientServices()
 
-@router.post("/",dependencies=[only_admins],response_model=Doctor)
+@router.post("/new_doctor",dependencies=[only_admins],response_model=Doctor)
 async def create_doctor(data: NewDoctor, session: db_dependency):
-    try:
-        print(data.doctor)
-        if await user_services.check_user_exist(data.phone_number,session):
+        if await user_services.check_user_exist(data.user.phone_number,session):
             raise HTTPException(detail='User is already exist.',status_code=400)
-        user =await user_services.add(user_data=UserCreate(phone_number=data.phone_number,password=data.phone_number,role=Role.DOCTOR),session=session)
+        user =user_services.add(user_data=UserCreate(**data.user.model_dump(),role=Role.DOCTOR),session=session)
         
-        doctor =await doctor_services.add(doctor_data=DoctorCreate(**data.doctor.model_dump(),user_id=user.id),session=session)
+        doctor =doctor_services.add(doctor_data=DoctorCreate(**data.doctor.model_dump(),user_id=user.id),session=session)
         await session.commit()
 
         return doctor
 
-    except SQLAlchemyError as e:
-        await session.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+    
     
 @router.get("/",response_model=List[Doctor],dependencies=[only_admins])
 async def get_all_doctors(session:db_dependency,page:Optional[int]=1,limit:Optional[int]=10):
@@ -52,12 +48,21 @@ async def get_doctor_info(session:db_dependency,current_user:User=only_doctors):
     doctor =await doctor_services.get_by_user_id(current_user.id,session)
     return doctor
 
+@router.get("/get_patients",response_model=List[PatientOut])
+async def get_patient_for_doctor(session:db_dependency,user:User=only_doctors):
+    doctor = await doctor_services.get_by_user_id(user.id,session)
+    if not doctor:
+        raise HTTPException(detail='Doctor is not found.',status_code=status.HTTP_404_NOT_FOUND)
+    patients = await patient_services.get_all_for_doctor(doctor.id,session)
+    return patients
+
+
+
 
 @router.get("/{id}",response_model=Doctor)
 async def get_one(id:UUID,session:db_dependency):
     doctor = await doctor_services.get_with_patients(id,session)
     return doctor 
-
 
 
 

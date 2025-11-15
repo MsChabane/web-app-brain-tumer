@@ -66,6 +66,7 @@ class PatientServices():
     async  def associate_to_doctor(self,patient:Patient,doctor_id:str,session:AsyncSession):
         patient.doctor_id=doctor_id
         session.add(patient)
+        return patient
     
     async def _get_latest(self,Model:SQLModel,patient_id:str,session:AsyncSession):
         stmt = (
@@ -118,5 +119,9 @@ class PatientServices():
             specific_symtoms=specific_symptoms,
             radio_images=radio_images
         )
-        
+    async def get_all_for_doctor(self,doctor_id:str,session:AsyncSession):
+        statement = select(Patient).where(Patient.doctor_id == doctor_id)
+        patients = (await session.exec(statement)).all()
+        return patients
+         
         

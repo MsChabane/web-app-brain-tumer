@@ -6,6 +6,8 @@ from .db.db import init_db
 from .routes.authRoute import router as authrouter
 from .routes.doctorRoute import router as doctorrouter
 from .routes.patientRoute import router as patientrouter
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError 
 
 
 from contextlib import asynccontextmanager
@@ -28,6 +30,15 @@ app.include_router(authrouter, prefix="/auth",tags=['auth'])
 app.include_router(doctorrouter, prefix="/doctor",tags=['doctor'])
 app.include_router(patientrouter, prefix="/patient",tags=['patient'])
 
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    first_error = exc.errors()[0]
+    field = first_error["loc"][-1]
+    message = first_error["msg"]
+
+    return JSONResponse(status_code=422, content={'detail':f"{field}: {message}"})
 
 @app.get("/")
 def helth(request:Request):

@@ -10,8 +10,7 @@ class SpecificSymptomsBase(BaseModel):
     lactation: Three_Classes
     swallowing: Four_Classes
     muscle: Four_Classes
-    class Config:
-        from_attributes = True
+    
     
 class SpecificSymptomsCreate(SpecificSymptomsBase):
     patient_id:UUID

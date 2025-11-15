@@ -14,11 +14,8 @@ from ..dependancies.auth import only_admins,only_patients
 from ..schemas.common import NewPatient
 from ..schemas.types import Role
 
-
-
 from uuid import UUID
 from ..dependancies.common import db_dependency
-
 
 router = APIRouter()
 user_services=UserServices()
@@ -27,25 +24,21 @@ doctor_services = DoctorServices()
 
 
 
-@router.post("/",response_model=PatientBase,dependencies=[only_admins])
+@router.post("/new-patient",response_model=PatientBase,dependencies=[only_admins])
 async def create_patient(data: NewPatient, session: db_dependency):
-    try:
-        
-        user = await user_services.get_by_phone_number(data.phone_number,session)
-        if user is not None :
-            raise HTTPException(detail='User is already exist.',status_code=status.HTTP_400_BAD_REQUEST)
-        
-        user = await user_services.add(UserCreate(phone_number=data.phone_number,password=data.phone_number,role=Role.PATIENT),session)
-        if not user :
-            raise HTTPException(detail='Inable to create the user.',status_code=status.HTTP_400_BAD_REQUEST)
-        
-        patient= await patient_services.add(PatientCreate(**data.patient_info.model_dump(),user_id=user.id),session)
-        await session.commit()
-        return patient
 
-    except SQLAlchemyError as e:
-        await session.rollback()
-        raise HTTPException(status_code=400, detail=str(e))
+    user = await user_services.get_by_phone_number(data.user.phone_number,session)
+    if user is not None :
+        raise HTTPException(detail='User is already exist.',status_code=status.HTTP_400_BAD_REQUEST)
+    
+    user =  user_services.add(UserCreate(**data.user.model_dump(),role=Role.PATIENT),session)
+
+    
+    patient= await patient_services.add(PatientCreate(**data.patient.model_dump(),user_id=user.id),session)
+    await session.commit()
+    return patient
+
+    
 
 @router.get("/me",response_model=PatientOut)
 async def me(session:db_dependency,current_user=only_patients):
@@ -60,7 +53,6 @@ async def get_all_symtoms_(session:db_dependency,current_user:User=only_patients
     all_symtons=await patient_services.get_all_symptoms(patient.id,session)
     
     return all_symtons 
-
 
 
 @router.get("/{patient_id}",response_model=PatientOut)
@@ -78,7 +70,7 @@ async def add_general_symp(patient_id:UUID,data:GeneralSymptomsBase,session:db_d
         raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
     gs= await patient_services.add_general_symptoms(GeneralSymptomsCreate(**data.model_dump(),patient_id=patient.id),session)
     await session.commit()
-    return gs
+    return GeneralSymptomsBase(gs)
 
 
 
@@ -101,7 +93,7 @@ async def add_radio_image(patient_id:UUID,data:RadioImageBase,session:db_depende
     await session.commit()
     return rd
 
-@router.post("/{patient_id}/associate-to/{doctor_id}",response_model=PatientBase,dependencies=[only_admins])
+@router.post("/{patient_id}/associate-to/{doctor_id}",response_model=PatientOut,dependencies=[only_admins])
 async def associate(patient_id:UUID,doctor_id:UUID,session:db_dependency):
     patient = await patient_services.get(patient_id,session)
     if not patient :
@@ -111,7 +103,7 @@ async def associate(patient_id:UUID,doctor_id:UUID,session:db_dependency):
         raise HTTPException(detail='Doctor is not exist.',status_code=status.HTTP_404_NOT_FOUND)
     patient = await patient_services.associate_to_doctor(patient,doctor_id,session)
     await session.commit()
-    return patient
+    return PatientOut(**patient.model_dump())
 
 
 

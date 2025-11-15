@@ -15,7 +15,8 @@ class UserUpdate(BaseModel):
 class UserCreate(UserBase):
     role:str
 
-
+class UserOut(UserCreate):
+    pass
 
 
 

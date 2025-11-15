@@ -10,17 +10,23 @@ class GeneralSymptomsBase(BaseModel):
     drowsiness: Three_Classes
     sleep_pb: Three_Classes
     memory_pb: Three_Classes
+   
+    class Config:
+        from_attributes = True
     
-class GeneralSymptomsBaseCreate(GeneralSymptomsBase):
+    
+    
+class GeneralSymptomsCreate(GeneralSymptomsBase):
     patient_id:UUID
 
-class GeneralSymptomsBaseUpdate(BaseModel):
+class GeneralSymptomsUpdate(BaseModel):
     headaches:Optional[Three_Classes]=None
     seizures:Optional[Seizures] =None
     fatigue: Optional[Three_Classes]=None
     drowsiness: Optional[Three_Classes]=None
     sleep_pb: Optional[Three_Classes]=None
     memory_pb: Optional[Three_Classes]=None
+    
     
     
     

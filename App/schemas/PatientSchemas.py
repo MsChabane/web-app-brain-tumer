@@ -13,15 +13,17 @@ class PatientBase(BaseModel):
     gender: Gender =Field()
     antecedents: Four_Classes
     
+    
+
    
 
 class PatientCreate(PatientBase):
     user_id:UUID
     
 class PatientUpdateStatus(BaseModel):
-    tumor_status: Binary
-    hospitalisation: Four_Classes
-    final_state: FinalStateEnum
+    tumor_status: Binary |None
+    hospitalisation: Four_Classes |None
+    final_state: FinalStateEnum |None
     
 class PatientUpdate(BaseModel):
     name: Optional[str] =None
@@ -30,7 +32,10 @@ class PatientUpdate(BaseModel):
     gender: Optional[Gender] =None
     antecedents: Optional[Four_Classes]=None
     
-
+class PatientOut(PatientBase):
+    tumor_status: Binary |None
+    hospitalisation: Four_Classes |None
+    final_state: FinalStateEnum |None
     
 
     

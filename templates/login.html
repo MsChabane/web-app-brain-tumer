@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', path = 'css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path = 'css/notification.css') }}">
+    <!--<link rel="stylesheet" href="../static/css/login.css">-->
+    <!-- <link rel="stylesheet" href="../static/css/notification.css">-->
+
+</head>
+
+<body>
+    <div class="notifications" id="notifications"></div>
+    <div class="wrapper">
+
+        <div class="card" role="main">
+
+            <h1>Sign in</h1>
+            <p class="lead">Enter your phone number and password to continue.</p>
+
+            <form id="loginForm">
+                <div>
+                    <label for="phone">Phone number</label>
+                    <input id="phone" name="phone" type="text" inputmode="tel" placeholder="e.g. +213550123456"
+                        autocomplete="tel" />
+                </div>
+
+                <div>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="Your password"
+                        autocomplete="current-password" ] />
+                </div>
+
+                <div class="row">
+                    <div class="note">Don't have an account? Ask your admin.</div>
+                    <button class="btn" id="submitBtn" type="submit">Sign in</button>
+                </div>
+
+
+            </form>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', path = 'js/notification.js') }}"></script>
+    <script src="{{ url_for('static', path = 'js/login.js') }}"></script>
+
+
+
+</body>
+
+</html>

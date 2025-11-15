@@ -1,7 +1,10 @@
-from sqlmodel import SQLModel,Field,Relationship
+from sqlmodel import SQLModel,Field,Column,DateTime,func
+
 from uuid import uuid4,UUID
-from typing  import TYPE_CHECKING    
+   
 from ..schemas.types import Three_Classes,Seizures
+from datetime import datetime 
+
 
 
 
@@ -17,8 +20,9 @@ class GeneralSymptoms(SQLModel, table=True):
     drowsiness: Three_Classes
     sleep_pb: Three_Classes
     memory_pb: Three_Classes
-    
-
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
 
 
 

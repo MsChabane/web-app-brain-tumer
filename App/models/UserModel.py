@@ -1,7 +1,9 @@
-from sqlmodel import Field,SQLModel,Relationship
+from sqlmodel import Field,SQLModel,Relationship,Column,DateTime,func
+
 import uuid
 from typing import Optional,TYPE_CHECKING,List
 from ..schemas.types import Role
+from datetime import datetime ,timezone
 
 if TYPE_CHECKING:
     from .PatientModel import Patient
@@ -16,7 +18,9 @@ class User(SQLModel, table=True):
     password: str = Field(nullable=False)
     role: Role = Field(default=Role.PATIENT,nullable=False)
     doctor: Optional["Doctor"] = Relationship(back_populates="user")
-    patient: List["Patient"] = Relationship(back_populates="user")
-    
+    patient: Optional["Patient"] = Relationship(back_populates="user")
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
     
 

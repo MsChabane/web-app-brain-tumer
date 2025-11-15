@@ -24,9 +24,9 @@ template =Jinja2Templates("templates")
 
 app.mount('/static',StaticFiles(directory="static"),'static')
 
-app.include_router(authrouter, prefix="/auth")
-app.include_router(doctorrouter, prefix="/doctor")
-app.include_router(patientrouter, prefix="/patient")
+app.include_router(authrouter, prefix="/auth",tags=['auth'])
+app.include_router(doctorrouter, prefix="/doctor",tags=['doctor'])
+app.include_router(patientrouter, prefix="/patient",tags=['patient'])
 
 
 @app.get("/")
@@ -34,7 +34,21 @@ def helth(request:Request):
     return template.TemplateResponse('index.html',{'request':request})
 
 
+@app.get('/auth/login')
+def serve_login_page(request:Request):
+    return template.TemplateResponse("login.html",{'request':request})
 
+@app.get('/admin')
+def serve_login_page(request:Request):
+    return template.TemplateResponse("admin.html",{'request':request})
+
+@app.get('/doctor')
+def serve_login_page(request:Request):
+    return template.TemplateResponse("doctor.html",{'request':request})
+
+@app.get('/patient')
+def serve_login_page(request:Request):
+    return template.TemplateResponse("patient.html",{'request':request})
 
 
 

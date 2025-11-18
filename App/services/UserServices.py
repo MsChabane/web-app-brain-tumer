@@ -25,7 +25,7 @@ class UserServices:
     async def check_user_exist(self,phone_number:str,session:AsyncSession):
         return (await self.get_by_phone_number(phone_number,session)) is not None
     
-    async def add( self,user_data:UserCreate,session:AsyncSession):
+    def add( self,user_data:UserCreate,session:AsyncSession):
         user_data.password=hash(user_data.password)
         user =User(**(user_data.model_dump()))
         session.add(user)
@@ -33,4 +33,9 @@ class UserServices:
 
     async def delete(self,user:User,session:AsyncSession):
         await session.delete(user)
+        
+    async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):
+        statement = select(User).offset((page-1)*limit).limit(limit)
+        result = await session.exec(statement)
+        return result.all()
 

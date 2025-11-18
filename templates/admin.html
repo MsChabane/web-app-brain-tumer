@@ -2,90 +2,293 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Doctors Page</title>
-    <!-- <link rel="stylesheet" href="../static/css/admin.css">
-    <link rel="stylesheet" href='../static/css/notification.css'> -->
-    <link rel="stylesheet" href="{{ url_for('static', path = 'css/admin.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path = 'css/notification.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - UStay</title>
+  <link rel="stylesheet" href="{{ url_for('static', path = 'css/admin.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path = 'css/notifications.css') }}">
 </head>
 
 <body>
 
-    <div class="notifications" id="notifications"></div>
-    <div class="sidebar">
-        <h2>Dashboard</h2>
-        <button onclick="showTab('patients')">Patients</button>
-        <button onclick="showTab('doctors')">Doctors</button>
+  <div class="sidebar">
+    <h2>UStay Admin</h2>
+    <a href="#" class="tab-link active" data-tab="dashboard">Dashboard</a>
+    <a href="#" class="tab-link" data-tab="users">Users</a>
+    <a href="#" class="tab-link" data-tab="patients">Patients</a>
+    <a href="#" class="tab-link" data-tab="doctors">Doctors</a>
+  </div>
+
+  <div class="main-content">
+    <div id="notification" class="notification"></div>
+
+    <!-- Dashboard -->
+    <div class="tab-content" id="dashboard-tab">
+      <div class="dashboard-cards">
+        <div class="card">
+          <h3>Total Users</h3>
+          <p id="total-users">10</p>
+        </div>
+        <div class="card">
+          <h3>Total Patients</h3>
+          <p id="total-patients">5</p>
+        </div>
+        <div class="card">
+          <h3>Total Doctors</h3>
+          <p id="total-doctors">3</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Tap -->
+    <div class="tab-content" id="users-tab" style="display:none;">
+      <div class="header">
+        <h2>Users</h2>
+        <button class="btn-add" onclick="openModal('add-admin-modal')">Add Admin</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Phone</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody id="users-table">
+          <tr>
+            <td>John Doe</td>
+            <td>Admin</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Patients Tab -->
+    <div class="tab-content" id="patients-tab" style="display:none;">
+      <div class="header">
+        <h2>Patients</h2>
+        <button class="btn-add" onclick="openModal('add-patient-modal')">Add Patient</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Antecedents</th>
+            <th>Tumor Status</th>
+            <th>Hospitalisation</th>
+            <th>Final State</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="patients-table">
+          <tr>
+            <td>John Doe</td>
+            <td>30</td>
+            <td>Male</td>
+            <td>0</td>
+            <td>1</td>
+            <td>5</td>
+            <td>6</td>
+            <td>
+              <button class="btn-update" onclick="showNotification('Update Patient clicked!')">Update</button>
+              <button class="btn-delete" onclick="showNotification('Delete Patient clicked!')">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Doctors Tab -->
+    <div class="tab-content" id="doctors-tab" style="display:none;">
+      <div class="header">
+
+        <h2>Doctors</h2>
+        <button class="btn-add" onclick="openModal('add-doctor-modal')">Add Doctor</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+
+            <th>Name</th>
+            <th>Specialty</th>
+            <th>Year of Eperiance</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="doctors-table">
+          <tr>
+
+            <td>Dr. Smith</td>
+            <td>Neurology</td>
+            <td>15</td>
+            <td>
+              <button class="btn-update" onclick="showNotification('Update Doctor clicked!')">Update</button>
+              <button class="btn-delete" onclick="showNotification('Delete Doctor clicked!')">Delete</button>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
     </div>
 
 
-    <div class="main">
+    <!-- add admin -->
+    <div class="modal" id="add-admin-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('add-admin-modal')">&times;</span>
+        <h3>Add Admin</h3>
+        <label for="admin-phone">Phone Number</label>
+        <input type="tel" id="admin-phone" placeholder="+213xxxxxxxxx">
 
-
-        <div id="doctors" class="tab-content">
-            <div class="header">
-                <h2>Doctors</h2>
-                <button onclick="openDoctorModal()">Add Doctor</button>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Speciality</th>
-                        <th>Experience</th>
-                        <th>Phone</th>
-                    </tr>
-                </thead>
-                <tbody id="doctorTable">
-                    <!-- Dummy sample data -->
-                    <tr>
-                        <td>Dr. Karim</td>
-                        <td>Cardiology</td>
-                        <td>12 years</td>
-                        <td>0555 120 450</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-admin-btn" onclick="submitAdmin()">
+            <span id="admin-submit-text">Submit</span>
+            <span id="admin-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('add-admin-modal')">Cancel</button>
         </div>
-
-        <!-- Patients TAB (Empty for now) -->
-        <div id="patients" class="tab-content" style="display:none;">
-            <div class="header">
-                <h2>Patients</h2>
-                <button>Add Patient</button>
-            </div>
-
-            <p>Patients table will go here.</p>
-        </div>
-
+      </div>
     </div>
+    <!-- add Patient  -->
+    <div class="modal" id="add-patient-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('add-patient-modal')">&times;</span>
+        <h3>Add Patient</h3>
 
+        <label for="patient-name">Name</label>
+        <input type="text" id="patient-name" placeholder="Patient Name">
 
-    <!-- ===== Doctor Modal Dialog ===== -->
-    <div class="modal-overlay" id="doctorModal">
-        <div class="modal">
-            <h3>Create Doctor</h3>
+        <label for="patient-surname">Surname</label>
+        <input type="text" id="patient-surname" placeholder="Patient Surname">
 
-            <input type="text" id="docName" placeholder="Full Name">
-            <input type="text" id="docSpeciality" placeholder="Speciality">
-            <input type="number" id="docExperience" placeholder="Years of Experience">
-            <input type="text" id="docPhone" placeholder="Phone Number">
+        <label for="patient-age">Age</label>
+        <input type="number" id="patient-age" placeholder="Age" min="0">
 
-            <div class="modal-buttons">
-                <button class="cancel-btn" onclick="closeDoctorModal()">Cancel</button>
-                <button class="save-btn" onclick="saveDoctor()">Save</button>
-            </div>
+        <label for="patient-gender">Gender</label>
+        <select id="patient-gender">
+          <option value="">Select Gender</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+
+        <label for="patient-antecedents">Antecedents</label>
+        <select id="patient-antecedents">
+          <option value="">Select Antecedents</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+
+        <label for="patient-phone">Phone Number</label>
+        <input type="tel" id="patient-phone" placeholder="+213xxxxxxxxx">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-patient-btn" onclick="submitPatient()">
+            <span id="patient-submit-text">Submit</span>
+            <span id="patient-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('add-patient-modal')">Cancel</button>
         </div>
+      </div>
+    </div>
+    <!-- update patient -->
+    <div class="modal" id="update-patient-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('update-patient-modal')">&times;</span>
+        <h3>update Patient</h3>
+
+        <label for="update-patient-name">Name</label>
+        <input type="text" id="update-patient-name" placeholder="Patient Name">
+        <input type="hidden" id="patient-id">
+        <label for="update-patient-surname">Surname</label>
+        <input type="text" id="update-patient-surname" placeholder="Patient Surname">
+
+        <label for="update-patient-age">Age</label>
+        <input type="number" id="update-patient-age" placeholder="Age" min="0">
+
+        <label for="update-patient-gender">Gender</label>
+        <select id="update-patient-gender">
+          <option value="">Select Gender</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+
+        <label for="update-patient-antecedents">Antecedents</label>
+        <select id="update-patient-antecedents">
+          <option value="">Select Antecedents</option>
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+
+
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-patient-btn-update" onclick="update_patient()">
+            <span id="patient-submit-text-update">Submit</span>
+            <span id="patient-submit-spinner-update" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('update-patient-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- add doctor model -->
+    <div class="modal" id="add-doctor-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('add-doctor-modal')">&times;</span>
+        <h3>Add Doctor</h3>
+
+        <label for="doctor-name">Name</label>
+        <input type="text" id="doctor-name" placeholder="e.g : John Doe ...">
+
+        <label for="doctor-speciality">Specialty</label>
+        <input type="text" id="doctor-speciality" placeholder="... ">
+
+        <label for="doctor-year-of-exp">Year of experiance</label>
+        <input type="number" id="doctor-year-of-exp" placeholder="..." min="0">
+
+        <label for="doctor-phone">Phone Number</label>
+        <input type="tel" id="doctor-phone" placeholder="+213xxxxxxxxx">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-doctor-btn-add" onclick="submitDoctor()">
+            <span id="doctor-submit-text-add">Submit</span>
+            <span id="doctor-submit-spinner-add" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('add-doctor-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- update doctor  -->
+    <div class="modal" id="update-doctor-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('update-doctor-modal')">&times;</span>
+        <h3>Update Doctor</h3>
+
+        <label for="doctor-name-update">Name</label>
+        <input type="text" id="doctor-name-update" placeholder="e.g : John Doe ...">
+        <input type="hidden" id="doctor-id">
+
+        <label for="doctor-speciality-update">Specialty</label>
+        <input type="text" id="doctor-speciality-update" placeholder="... ">
+
+        <label for="doctor-year-of-exp-update">Year of experiance</label>
+        <input type="number" id="doctor-year-of-exp-update" placeholder="..." min="0">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-doctor-btn-update" onclick="update_doctor()">
+            <span id="doctor-submit-text-update">Submit</span>
+            <span id="doctor-submit-spinner-update" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('update-doctor-modal')">Cancel</button>
+        </div>
+      </div>
     </div>
 
     <script src="{{ url_for('static', path = 'js/notification.js') }}"></script>
     <script src="{{ url_for('static', path = 'js/admin.js') }}"></script>
-    <!-- <script src='../static/js/notification.js'></script>
-    <script src='../static/js/admin.js'></script> -->
-
-
 
 </body>
 

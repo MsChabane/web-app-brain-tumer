@@ -11,13 +11,15 @@ class GeneralSymptomsBase(BaseModel):
     sleep_pb: Three_Classes
     memory_pb: Three_Classes
    
-    class Config:
-        from_attributes = True
+    
     
     
     
 class GeneralSymptomsCreate(GeneralSymptomsBase):
     patient_id:UUID
+    
+class GeneralSymptomsOut(GeneralSymptomsBase):
+    id:UUID
 
 class GeneralSymptomsUpdate(BaseModel):
     headaches:Optional[Three_Classes]=None

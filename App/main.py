@@ -9,7 +9,14 @@ from .routes.doctorRoute import router as doctorrouter
 from .routes.patientRoute import router as patientrouter
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError 
+import os
+from datetime import datetime
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # points to App/
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+
+# verify paths
 
 
 
@@ -18,9 +25,9 @@ _version_ ="0.1.0"
 
 app= FastAPI(version=_version_,description=" ")
 
-template =Jinja2Templates("templates")
+template = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
-app.mount('/static',StaticFiles(directory="static"),'static')
+app.mount('/static',StaticFiles(directory=os.path.join(BASE_DIR, "static")),name='static')
 
 app.include_router(dashrouter,prefix='/dashboard',tags=['dashboard'])
 app.include_router(authrouter, prefix="/auth",tags=['auth'])
@@ -45,7 +52,7 @@ def helth(request:Request):
 
 @app.get('/auth/login',response_class=HTMLResponse)
 def serve_login_page(request:Request):
-    return template.TemplateResponse("login.html",{'request':request})
+    return template.TemplateResponse("login.html",{'request':request })
 
 @app.get('/admin',response_class=HTMLResponse)
 def serve_login_page(request:Request):

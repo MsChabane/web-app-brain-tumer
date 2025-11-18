@@ -1,7 +1,7 @@
 from pydantic import BaseModel,Field,field_validator
 from uuid import UUID
 from .types import Gender,Four_Classes,Binary,FinalStateEnum
-from typing import Optional,TYPE_CHECKING
+from typing import Optional
 
 
     
@@ -38,6 +38,7 @@ class PatientUpdate(BaseModel):
     antecedents: Optional[Four_Classes]=None
     
 class PatientOut(PatientBase):
+    id:UUID
     tumor_status: Binary |None
     hospitalisation: Four_Classes |None
     final_state: FinalStateEnum |None

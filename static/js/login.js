@@ -10,7 +10,7 @@ form.addEventListener("submit", async (e) => {
 	const password = document.getElementById("password").value;
 
 	if (!phone || !password) {
-		pushNotification("Fill all fields", "warning");
+		showNotification("Fill all fields");
 		submitBtn.disabled = false;
 		return;
 	}
@@ -34,11 +34,11 @@ form.addEventListener("submit", async (e) => {
 
 			return;
 		} else {
-			pushNotification(data.detail, "warning");
+			showNotification(data.detail, false, 1000);
 		}
 		submitBtn.disabled = false;
 	} catch (err) {
-		pushNotification("Network error", "error");
+		showNotification("Network error", false);
 		submitBtn.disabled = false;
 	}
 });

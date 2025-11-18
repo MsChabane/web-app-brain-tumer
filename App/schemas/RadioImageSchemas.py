@@ -9,5 +9,6 @@ class RadioImageBase(BaseModel):
 class RadioImageCreate(RadioImageBase):
     patient_id:UUID
     
-    
+class RadioImageOut(RadioImageCreate):
+    id:UUID
     

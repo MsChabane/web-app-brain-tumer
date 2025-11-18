@@ -17,6 +17,9 @@ class GeneralSymptomsBase(BaseModel):
     
 class GeneralSymptomsCreate(GeneralSymptomsBase):
     patient_id:UUID
+    
+class GeneralSymptomsOut(GeneralSymptomsBase):
+    id:UUID
 
 class GeneralSymptomsUpdate(BaseModel):
     headaches:Optional[Three_Classes]=None

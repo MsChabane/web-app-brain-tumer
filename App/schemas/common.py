@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from pydantic.generics import GenericModel
 from .DoctorSchemas import DoctorBase
-from typing import List
+from typing import List,TypeVar,Generic,Optional
 from .PatientSchemas import PatientBase
 from .GeneralSymptomsSchemas import GeneralSymptomsBase
 from .SpecificSymptomsSchemas import SpecificSymptomsBase
@@ -28,3 +29,11 @@ class AllSymptoms(BaseModel):
     general_symptoms:List[GeneralSymptomsBase]
     specific_symtoms:List[SpecificSymptomsBase]
     radio_images:List[RadioImageBase]
+
+
+
+T = TypeVar("T")
+class Message(GenericModel, Generic[T]):
+    message: str
+    data: Optional[T]=None
+    

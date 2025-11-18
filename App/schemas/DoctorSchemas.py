@@ -15,8 +15,8 @@ class DoctorUpdate(BaseModel):
     specialty:Optional[str]=None
     years_experience:Optional[int]=None
 
-
-
+class DoctorOut(DoctorBase):
+    id :uuid.UUID
 
     
 

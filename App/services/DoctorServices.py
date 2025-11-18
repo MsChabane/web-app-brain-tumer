@@ -18,12 +18,12 @@ class DoctorServices:
         return doctor
     
         
-    async def get(self,doctor_id:str,session:AsyncSession):
+    async def get(self,doctor_id:str,session:AsyncSession)->Doctor:
         doctor = await session.get(Doctor, doctor_id)
         return doctor 
     
     async def get_with_patients(self,doctor_id:str,session:AsyncSession):
-        doctor =await session.get(Doctor, doctor_id,populate_existing=True)
+        doctor =await session.get(Doctor, doctor_id)
         return doctor
         
     
@@ -36,7 +36,6 @@ class DoctorServices:
     def add( self,doctor_data:DoctorCreate,session:AsyncSession):
         doctor =Doctor(**(doctor_data.model_dump()))
         session.add(doctor)
-
         return doctor 
     
     async def get_by_user_id(self,user_id:str,session:AsyncSession):

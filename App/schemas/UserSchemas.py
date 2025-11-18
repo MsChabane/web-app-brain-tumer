@@ -1,9 +1,9 @@
 from pydantic import BaseModel,field_validator
 import re
+from uuid import UUID
 
 class UserBase(BaseModel):
     phone_number:str
-    password:str
     @field_validator("phone_number")
     def validate_phone_number(cls, v):
         pattern = r"^(?:\+213[5-7]\d{8}|0[5-7]\d{8})$"
@@ -14,18 +14,20 @@ class UserBase(BaseModel):
         return v
 
 class UserLogin(UserBase):
-    pass
+    password:str
+    
     
 
 class UserUpdate(BaseModel):
     password:str
 
 
-class UserCreate(UserBase):
+class UserCreate(UserLogin):
     role:str
 
-class UserOut(UserCreate):
-    pass
+class UserOut(UserBase):
+    id:UUID
+    role:str
 
 
 

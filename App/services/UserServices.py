@@ -33,4 +33,9 @@ class UserServices:
 
     async def delete(self,user:User,session:AsyncSession):
         await session.delete(user)
+        
+    async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):
+        statement = select(User).offset((page-1)*limit).limit(limit)
+        result = await session.exec(statement)
+        return result.all()
 

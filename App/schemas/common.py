@@ -37,3 +37,7 @@ class Message(GenericModel, Generic[T]):
     message: str
     data: Optional[T]=None
     
+class Total_insights(BaseModel):
+    total_users:int
+    total_patients:int
+    total_doctors:int

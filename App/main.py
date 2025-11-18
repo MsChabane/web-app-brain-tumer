@@ -22,7 +22,7 @@ template =Jinja2Templates("templates")
 
 app.mount('/static',StaticFiles(directory="static"),'static')
 
-app.include_router(dashrouter,prefix='/dashbord',tags=['dashboard'])
+app.include_router(dashrouter,prefix='/dashboard',tags=['dashboard'])
 app.include_router(authrouter, prefix="/auth",tags=['auth'])
 app.include_router(doctorrouter, prefix="/doctor",tags=['doctor'])
 app.include_router(patientrouter, prefix="/patient",tags=['patient'])

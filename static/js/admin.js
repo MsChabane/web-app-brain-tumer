@@ -16,13 +16,32 @@ tabLinks.forEach((link) => {
 			fill_table_doctors();
 		} else if (tabId === "patients-tab") {
 			fill_table_patients();
-		} else if (tabId == "users-tab") {
+		} else if (tabId === "users-tab") {
 			fill_table_users();
+		} else if (tabId === "dashboard-tab") {
+			fill_dashboard();
 		}
 	});
 });
 
-// Modals
+async function fill_dashboard() {
+	await _call(
+		"/dashboard/total",
+		"GET",
+		undefined,
+		(data) => {
+			console.log(data);
+			document.getElementById("total-users").innerHTML = data.data.total_users;
+			document.getElementById("total-patients").innerHTML =
+				data.data.total_patients;
+			document.getElementById("total-doctors").innerHTML =
+				data.data.total_doctors;
+		},
+		() => {}
+	);
+}
+fill_dashboard();
+
 function openModal(id) {
 	document.getElementById(id).style.display = "flex";
 }
@@ -38,7 +57,7 @@ function add_doctor_to_table(doctor) {
             <td>${doctor.years_experience}</td>
             <td>
               <button class="btn-update" onclick="update_doctor_open_model('${doctor.id}')">Update</button>
-              <button class="btn-delete" onclick="showNotification('Delete Doctor clicked!')">Delete</button>
+              <button class="btn-delete" onclick="openDeleteModal('Are you sure you want to delete this doctor?','${doctor.id}','doctor')">Delete</button>
             </td>`;
 	doctor_table.appendChild(tr);
 }
@@ -56,7 +75,9 @@ function add_patient_to_table(patient) {
               <button class="btn-update" onclick="update_patient_open_model('${
 								patient.id
 							}')">Update</button>
-              <button class="btn-delete" onclick="showNotification('Delete Patient clicked!')">Delete</button>
+              <button class="btn-delete" onclick="openDeleteModal('Are you sure you want to delete this patient?','${
+								patient.id
+							}','patient')">Delete</button>
             </td>`;
 	patient_tabke.appendChild(tr);
 }
@@ -427,4 +448,47 @@ function getRole() {
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
+}
+
+async function delete_(role, id) {
+	const btn = document.getElementById("submit-admin-btn");
+	const text = document.getElementById("delete-text");
+	const spinner = document.getElementById("delete-spinner");
+
+	btn.disabled = true;
+	text.style.display = "none";
+	spinner.style.display = "inline-block";
+
+	await _call(
+		`/${role}/${id}`,
+		"DELETE",
+		undefined,
+		(data) => {
+			console.log(data);
+			document.getElementById(id).remove();
+			closeDeleteModal();
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+			document.getElementById("delete-id").value = "";
+		},
+		() => {
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+		}
+	);
+}
+
+function openDeleteModal(message, id, type) {
+	document.getElementById("delete-message").innerText = message;
+	document.getElementById("delete-id").value = id;
+	document.getElementById("confirm-delete-btn").onclick = () => {
+		delete_(type, id);
+	};
+	document.getElementById("delete-confirm-modal").style.display = "flex";
+}
+
+function closeDeleteModal() {
+	document.getElementById("delete-confirm-modal").style.display = "none";
 }

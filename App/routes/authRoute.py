@@ -33,7 +33,7 @@ async def login(data:UserLogin,session:db_dependency):
 async def signup_admins(data:UserBase,session:db_dependency) :
     if  await user_services.check_user_exist(data.phone_number,session):
         raise HTTPException(
-            detail='user is already exist',status_code=400
+            detail='User is already exist',status_code=400
         )
     
     user= user_services.add(UserCreate(**data.model_dump(),password=data.phone_number,role=Role.ADMIN),session)
@@ -47,7 +47,7 @@ async def get_all_users(session:db_dependency,page:Optional[int]=1,limit:Optiona
 
 @router.post("/profile",status_code=200,response_model=UserOut)
 async def profile(user=current_user) :
-    return UserOut(**user.model_dump())
+    return user
     
 
 

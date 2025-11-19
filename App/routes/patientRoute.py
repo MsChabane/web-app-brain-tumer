@@ -1,19 +1,16 @@
 from fastapi import APIRouter, HTTPException,status
-from ..models.UserModel import User
 from ..services.PatientServices import PatientServices
 from ..services.DoctorServices import DoctorServices
 from ..services.UserServices import UserServices
 from ..schemas.UserSchemas import UserCreate
-from ..schemas.PatientSchemas import PatientCreate,PatientBase,PatientOut,PatientUpdate
+from ..schemas.PatientSchemas import PatientCreate,PatientOut,PatientUpdate
 from ..schemas.GeneralSymptomsSchemas import GeneralSymptomsBase,GeneralSymptomsCreate,GeneralSymptomsOut,GeneralSymptomsUpdate
 from ..schemas.SpecificSymptomsSchemas import SpecificSymptomsCreate,SpecificSymptomsBase,SpecificSymptomsOut,SpecificSymptomsUpdate
 from ..schemas.RadioImageSchemas import RadioImageCreate,RadioImageBase,RadioImageOut
-from ..schemas.common import AllSymptoms,Message
+from ..schemas.common import AllSymptoms,Message,NewPatient,LatestSymptoms
 from ..dependancies.auth import only_admins,only_patients
-from ..schemas.common import NewPatient
 from ..schemas.types import Role
 from typing import List ,Optional
-
 from uuid import UUID
 from ..dependancies.common import db_dependency
 
@@ -46,16 +43,17 @@ async def get_all_patients(session:db_dependency,page:Optional[int]=1,limit:Opti
 @router.get("/me",response_model=PatientOut)
 async def me(session:db_dependency,current_user=only_patients):
     patient =await patient_services.get_by_user_id(current_user.id,session)
+    
     return patient
 
-@router.get("/get-all-symptoms",response_model=AllSymptoms)
-async def get_all_symtoms_(session:db_dependency,current_user:User=only_patients):
+@router.get("/get-latest-symptoms",response_model=LatestSymptoms)
+async def get_latest_symtoms_(session:db_dependency,current_user=only_patients):
     patient = await patient_services.get_by_user_id(str(current_user.id),session)
     if not patient :
         raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
-    all_symtons=await patient_services.get_all_symptoms(patient.id,session)
+    latest_symp=await patient_services.get_latest_infos(patient.id,session)
     
-    return all_symtons 
+    return latest_symp 
 
 @router.get("/no-associated",response_model=List[PatientOut])
 async def get_no_associated(session:db_dependency):
@@ -75,7 +73,7 @@ async def get_all_symtoms_(patient_id:UUID,session:db_dependency):
 @router.get("/{patient_id}",response_model=PatientOut)
 async def get_patient(patient_id:UUID,session:db_dependency):
     patient = await patient_services.get(patient_id,session)
-    return PatientOut(**patient.model_dump())
+    return patient
 
 
 

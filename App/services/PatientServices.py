@@ -1,4 +1,5 @@
 from sqlmodel import select,SQLModel,delete
+from sqlalchemy.orm import selectinload
 from ..db.db import AsyncSession
 import  asyncio
 from ..models.PatientModel import Patient
@@ -42,7 +43,7 @@ class PatientServices():
         return rd
     
     async def get_by_user_id(self,user_id:str,session:AsyncSession):
-        statement = select(Patient).where(Patient.user_id == user_id)
+        statement = select(Patient).where(Patient.user_id == user_id).options(selectinload(Patient.doctor)) 
         patient = (await session.exec(statement)).first()
         return patient
     
@@ -136,9 +137,9 @@ class PatientServices():
         )
         
         return LatestSymptoms(
-            general_symptoms=GeneralSymptomsBase(**gs.model_dump()) if gs else None,
-    specific_symtoms=SpecificSymptomsBase(**ss.model_dump()) if ss else None,
-    radio_image=RadioImageBase(**rd.model_dump()) if rd else None
+            general_symptoms=GeneralSymptomsBase(gs) if gs else None,
+    specific_symtoms=SpecificSymptomsBase(ss) if ss else None,
+    radio_image=RadioImageBase(rd) if rd else None
         ) 
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):

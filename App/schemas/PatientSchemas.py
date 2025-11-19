@@ -2,7 +2,7 @@ from pydantic import BaseModel,Field,field_validator
 from uuid import UUID
 from .types import Gender,Four_Classes,Binary,FinalStateEnum
 from typing import Optional
-
+from .DoctorSchemas import DoctorOut
 
     
 
@@ -42,6 +42,7 @@ class PatientOut(PatientBase):
     tumor_status: Binary |None
     hospitalisation: Four_Classes |None
     final_state: FinalStateEnum |None
+    doctor:DoctorOut | None
     
 
     

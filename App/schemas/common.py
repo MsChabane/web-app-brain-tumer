@@ -20,9 +20,9 @@ class NewPatient(BaseModel):
     
 class LatestSymptoms(BaseModel):
     
-    general_symptoms:GeneralSymptomsBase
-    specific_symtoms:SpecificSymptomsBase
-    radio_image:RadioImageBase
+    general_symptoms:GeneralSymptomsBase |None
+    specific_symtoms:SpecificSymptomsBase |None
+    radio_image:RadioImageBase |None
     
 
 class AllSymptoms(BaseModel):
@@ -36,4 +36,9 @@ T = TypeVar("T")
 class Message(GenericModel, Generic[T]):
     message: str
     data: Optional[T]=None
+    
+class Total_insights(BaseModel):
+    total_users:int
+    total_patients:int
+    total_doctors:int
     

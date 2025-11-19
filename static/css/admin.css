@@ -248,3 +248,84 @@ button {
         transform: rotate(360deg);
     }
 }
+
+
+.delete-modal {
+    max-width: 400px;
+    padding: 25px;
+    border-radius: 10px;
+    background: #fff;
+    text-align: center;
+    animation: popIn 0.25s ease;
+}
+
+@keyframes popIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#delete-confirm-modal .modal-content h3 {
+    margin-bottom: 10px;
+    font-size: 22px;
+    color: #d63031;
+}
+
+#delete-confirm-modal p {
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+
+.delete-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn-confirm {
+    width: 100%;
+    padding: 10px;
+    background: #d63031;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-confirm:hover {
+    background: #b02222;
+}
+
+.btn-cancel {
+    width: 100%;
+    padding: 10px;
+    background: #636e72;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-cancel:hover {
+    background: #4b5357;
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}

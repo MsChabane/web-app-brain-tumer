@@ -1,58 +1,70 @@
- body {
-     font-family: Arial, sans-serif;
-     margin: 0;
-     padding: 20px;
-     background: #f7f7f7;
- }
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f6fa;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
- .container {
-     max-width: 900px;
-     margin: auto;
- }
+header {
+    background-color: #3949AB;
+    color: white;
+    padding: 1rem 2rem;
+}
 
- h2 {
-     color: #333;
-     border-bottom: 2px solid #ddd;
-     padding-bottom: 5px;
- }
+header h1 {
+    margin: 0;
+}
 
- .card {
-     background: white;
-     padding: 20px;
-     border-radius: 8px;
-     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-     margin-bottom: 20px;
- }
+header p {
+    margin: 0.2rem 0 0;
+}
 
- .info-item {
-     margin-bottom: 12px;
- }
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
 
- .info-item span {
-     font-weight: bold;
-     color: #444;
- }
+h2 {
+    color: #3949AB;
+    margin-top: 2rem;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 0.3rem;
+}
 
- table {
-     width: 100%;
-     border-collapse: collapse;
-     background: white;
-     border-radius: 8px;
-     overflow: hidden;
-     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
- }
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.8rem;
+}
 
- th,
- td {
-     padding: 10px 12px;
-     border-bottom: 1px solid #eee;
- }
+.info-table th,
+.info-table td {
+    border: 1px solid #ccc;
+    padding: 0.6rem 1rem;
+    text-align: center;
 
- th {
-     background: #fafafa;
-     text-align: left;
- }
+}
 
- tr:hover {
-     background-color: #f2f2f2;
- }
+.info-table th {
+    background-color: #3949AB;
+    color: #fff;
+}
+
+.info-table tr:nth-child(even) td {
+    background-color: #e8eaf6;
+}
+
+td {
+    font-weight: 500;
+}
+
+a {
+    color: #3949AB;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

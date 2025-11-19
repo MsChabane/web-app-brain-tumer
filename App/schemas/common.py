@@ -20,9 +20,9 @@ class NewPatient(BaseModel):
     
 class LatestSymptoms(BaseModel):
     
-    general_symptoms:GeneralSymptomsBase
-    specific_symtoms:SpecificSymptomsBase
-    radio_image:RadioImageBase
+    general_symptoms:GeneralSymptomsBase |None
+    specific_symtoms:SpecificSymptomsBase |None
+    radio_image:RadioImageBase |None
     
 
 class AllSymptoms(BaseModel):
@@ -41,3 +41,4 @@ class Total_insights(BaseModel):
     total_users:int
     total_patients:int
     total_doctors:int
+    

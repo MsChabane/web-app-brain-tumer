@@ -7,78 +7,35 @@
     <title>Patient Details</title>
 
     <link rel="stylesheet" href="/static/css/patient.css">
-    <link rel="stylesheet" href="/static/css/notification.css">
+    <link rel="stylesheet" href="/static/css/notifications.css">
 </head>
 
 <body>
-    <div class="notifications" id="notifications"></div>
-    <div class="container">
-        <div class="card " id="personel_info">
-            <h2>Personal Information</h2>
+    <div class="notification" id="notification"></div>
+    <header>
+        <h1>Patient Dashboard</h1>
+    </header>
 
-            <!-- <div class="info-item"><span>Name:</span> </div>
-            <div class="info-item"><span>Surname:</span> </div>
-            <div class="info-item"><span>Age:</span> </div>
-            <div class="info-item"><span>Gender:</span> </div>
-            <div class="info-item"><span>antecedents:</span> </div>
-            <div class="info-item"><span>hospitalisation:</span> </div>
-            <div class="info-item"><span>Tumeur Status:</span> </div>
-            <div class="info-item"><span>Final State:</span> </div> -->
-        </div>
-
-
+    <main class="container">
+        <h2>Personal Information</h2>
+        <table class="info-table" id="patient-info">
+        </table>
 
         <h2>General Symptoms</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>headaches</th>
-                    <th>seizures</th>
-                    <th>fatigue</th>
-                    <th>drowsiness</th>
-                    <th>sleeppb</th>
-                    <th>memorypb</th>
-                </tr>
-            </thead>
-            <tbody id="table-general-symtoms"></tbody>
+        <table class="info-table" id="general-symptoms-info">
         </table>
-
 
         <h2>Specific Symptoms</h2>
-        <table>
-            <thead>
-
-                <tr>
-                    <th>pressure</th>
-                    <th>balance loss</th>
-                    <th>judgment degradation</th>
-                    <th>sensedegradation</th>
-                    <th>lactation</th>
-                    <th>swallowing</th>
-                    <th>muscle</th>
-                </tr>
-            </thead>
-            <tbody id="table-specific-symptoms">
-
-            </tbody>
-
-
+        <table class="info-table" id="specific-symptoms-info">
         </table>
 
-
-        <h2>Radiology Images</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>type</th>
-                </tr>
-            </thead>
-            <tbody id="table-radio-image">
-
-            </tbody>
+        <h2>Radio Images</h2>
+        <table class="info-table" id="radio-image-info">
         </table>
 
-    </div>
+    </main>
+
+
 
     <script src="/static/js/notification.js"></script>
     <script src="/static/js/patient.js"></script>

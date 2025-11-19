@@ -13,7 +13,6 @@ from fastapi.exceptions import RequestValidationError
 
 
 
-
 _version_ ="0.1.0"
 
 app= FastAPI(version=_version_,description=" ")

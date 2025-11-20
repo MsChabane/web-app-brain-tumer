@@ -1,8 +1,10 @@
 const tabLinks = document.querySelectorAll(".tab-link");
 const tabContents = document.querySelectorAll(".tab-content");
 const doctor_table = document.getElementById("doctors-table");
-const patient_tabke = document.getElementById("patients-table");
+const patient_table = document.getElementById("patients-table");
+const patient_no_asso_table = document.getElementById("patients-no-asso-table");
 const user_table = document.getElementById("users-table");
+const doctors_list_assoc = document.getElementById("doctors-list");
 
 tabLinks.forEach((link) => {
 	link.addEventListener("click", (e) => {
@@ -20,6 +22,9 @@ tabLinks.forEach((link) => {
 			fill_table_users();
 		} else if (tabId === "dashboard-tab") {
 			fill_dashboard();
+		} else if (tabId === "associations-tab") {
+			fill_table_patients_no_assoc();
+			fill_list_doctors();
 		}
 	});
 });
@@ -79,8 +84,88 @@ function add_patient_to_table(patient) {
 								patient.id
 							}','patient')">Delete</button>
             </td>`;
-	patient_tabke.appendChild(tr);
+	patient_table.appendChild(tr);
 }
+
+function add_doctor_to_list(doctor) {
+	doctors_list_assoc.innerHTML += `
+        <option value="${doctor.id}">${doctor.name}</option>
+	`;
+}
+
+function open_associate_modal(id) {
+	console.log(id);
+	document.getElementById("patient-to-associate").value = id;
+	openModal("associate-modal");
+}
+
+function add_patient_no_asso_to_table(patient) {
+	const tr = document.createElement("tr");
+	tr.dataset.patientId = patient.id;
+	tr.innerHTML = `<td>${patient.name + " " + patient.surname} </td>
+	<td>${patient.gender == "M" ? "Male" : "Female"}</td>
+	<td>${patient.age}</td>
+            <td>${patient.antecedents}</td>
+            <td>${patient.tumor_status || "-"}</td>
+            <td>${patient.hospitalisation || "-"}</td>
+            <td>${patient.final_state || "-"}</td>
+			<td>${patient.doctor ? patient.doctor.name : "-"}</td>
+            <td>
+              <button class="btn-add" onclick="open_associate_modal('${
+								patient.id
+							}')">associate</button>
+            </td>`;
+	patient_no_asso_table.appendChild(tr);
+}
+async function fill_list_doctors() {
+	doctors_list_assoc.innerHTML = `<option value="">Select doctor</option>`;
+	await _call(
+		"/doctor/all?page=1&limit=1000",
+		"GET",
+		undefined,
+		(data) => {
+			data.forEach((element) => add_doctor_to_list(element));
+		},
+		() => {}
+	);
+}
+
+async function associate() {
+	const doctor = doctors_list_assoc.value;
+	const patient_id = document.getElementById("patient-to-associate").value;
+	if (!doctor) {
+		showNotification("Please select a doctor!");
+	}
+	const btn = document.getElementById("submit-associate-btn");
+	const text = document.getElementById("associate-submit-text");
+	const spinner = document.getElementById("associate-submit-spinner");
+
+	btn.disabled = true;
+	text.style.display = "none";
+	spinner.style.display = "inline-block";
+	await _call(
+		`/patient/${patient_id}/associate-to/${doctor}`,
+		"POST",
+		undefined,
+		(data) => {
+			console.log(data);
+			showNotification("Patient is assciated!", true);
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+			document
+				.querySelector(`[data-patient-id='${patient_id}']`)
+				.children.item(7).innerHTML = data.doctor.name;
+			closeModal("associate-modal");
+		},
+		() => {
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+		}
+	);
+}
+
 function add_user_to_table(user) {
 	const tr = document.createElement("tr");
 	tr.id = user.id;
@@ -114,13 +199,26 @@ async function fill_table_doctors() {
 	);
 }
 async function fill_table_patients() {
-	patient_tabke.innerHTML = "";
+	patient_table.innerHTML = "";
 	await _call(
 		"/patient/all",
 		"GET",
 		undefined,
 		(data) => {
 			data.forEach((element) => add_patient_to_table(element));
+		},
+		() => {}
+	);
+}
+
+async function fill_table_patients_no_assoc() {
+	patient_no_asso_table.innerHTML = "";
+	await _call(
+		"/patient/all",
+		"GET",
+		undefined,
+		(data) => {
+			data.forEach((element) => add_patient_no_asso_to_table(element));
 		},
 		() => {}
 	);

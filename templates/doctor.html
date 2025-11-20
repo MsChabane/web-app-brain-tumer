@@ -2,16 +2,16 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/static/css/doctor.css">
-    <link rel="stylesheet" href="/static/css/notification.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/static/css/doctor.css">
+  <link rel="stylesheet" href="/static/css/notification.css">
 </head>
 
 <body>
-    <div class="notifications" id="notifications"></div>
-     <div class="sidebar">
+  <div class="notifications" id="notifications"></div>
+  <div class="sidebar">
     <h2>UStay Doctor</h2>
     <a href="#" class="tab-link" data-tab="patients">Patients</a>
     <a href="#" class="tab-link" data-tab="checks">Checks</a>
@@ -22,9 +22,9 @@
 
     <!-- Patients Tab -->
     <div class="tab-content" id="patients-tab" style="display:none;">
-      <div >
+      <div>
         <h2>Patients</h2>
-        
+
       </div>
       <table>
         <thead>
@@ -53,7 +53,7 @@
       <table>
         <thead>
           <tr>
-           
+
             <th>Name</th>
             <th>Gender</th>
             <th>Age</th>
@@ -71,7 +71,7 @@
     </div>
 
 
-    
+
     <!-- add general symptoms  -->
     <div class="modal" id="add-gs-modal">
       <div class="modal-content">
@@ -81,7 +81,7 @@
         <label for="gs-headaches">Headaches</label>
         <select id="gs-headaches">
           <option value="">Select Headaches</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
@@ -95,34 +95,34 @@
           <option value="S">S</option>
         </select>
 
-         <label for="gs-fatigue">Fatigue</label>
+        <label for="gs-fatigue">Fatigue</label>
         <select id="gs-fatigue">
           <option value="">Select Fatigue</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
 
-         <label for="gs-drowsiness">Drowsiness</label>
+        <label for="gs-drowsiness">Drowsiness</label>
         <select id="gs-drowsiness">
           <option value="">Select Drowsiness</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
 
-         <label for="gs-sleep_pb">Sleep problems</label>
+        <label for="gs-sleep_pb">Sleep problems</label>
         <select id="gs-sleep_pb">
           <option value="">Select Sleep problems</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
 
-         <label for="gs-memory_pb">Memory problems</label>
+        <label for="gs-memory_pb">Memory problems</label>
         <select id="gs-memory_pb">
           <option value="">Select Memory problems</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
@@ -146,7 +146,7 @@
         <label for="ss-pressure">Pressure</label>
         <select id="ss-pressure">
           <option value="">Select Pressure</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -159,36 +159,36 @@
           <option value="1">1</option>
         </select>
 
-         <label for="ss-judgment_degradation">Judgment degradation</label>
+        <label for="ss-judgment_degradation">Judgment degradation</label>
         <select id="ss-judgment_degradation">
           <option value="">Select Judgment degradation</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
         </select>
 
-         <label for="ss-sense_degradation">Sense degradation</label>
+        <label for="ss-sense_degradation">Sense degradation</label>
         <select id="ss-sense_degradation">
           <option value="">Select Sense degradation</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
         </select>
 
-         <label for="ss-lactation">Lactation</label>
+        <label for="ss-lactation">Lactation</label>
         <select id="ss-lactation">
           <option value="">Select Lactation</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
         </select>
 
-         <label for="ss-swallowing">Swallowing</label>
+        <label for="ss-swallowing">Swallowing</label>
         <select id="ss-swallowing">
           <option value="">Select Swallowing</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -197,7 +197,7 @@
         <label for="ss-muscle">Muscle</label>
         <select id="ss-muscle">
           <option value="">Select Muscle</option>
-         <option value="0">0</option>
+          <option value="0">0</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -215,12 +215,12 @@
       </div>
     </div>
 
-<!-- add Radio Image -->
- <div class="modal" id="add-rd-modal">
+    <!-- add Radio Image -->
+    <div class="modal" id="add-rd-modal">
       <div class="modal-content">
         <span class="close-modal" onclick="closeModal('add-rd-modal')">&times;</span>
         <h3>Add Radio Image Type</h3>
-         <label for="add-rd-type">Radio Image Type</label>
+        <label for="add-rd-type">Radio Image Type</label>
         <input type="number" id="add-rd-type" placeholder="Radio Image Type" min="0">
 
 
@@ -233,7 +233,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="modal" id="delete-confirm-modal">
       <div class="modal-content delete-modal">
         <h3 class="modal-title">Confirm Delete</h3>

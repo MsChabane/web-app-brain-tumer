@@ -25,7 +25,7 @@ patient_services=PatientServices()
 async def create_doctor(data: NewDoctor, session: db_dependency):
         if await user_services.check_user_exist(data.user.phone_number,session):
             raise HTTPException(detail='User is already exist.',status_code=400)
-        user =user_services.add(user_data=UserCreate(**data.user.model_dump(),role=Role.DOCTOR),session=session)
+        user =user_services.add(user_data=UserCreate(**data.user.model_dump(),password=data.user.phone_number,role=Role.DOCTOR),session=session)
         doctor =doctor_services.add(doctor_data=DoctorCreate(**data.doctor.model_dump(),user_id=user.id),session=session)
         await session.commit()
         return doctor

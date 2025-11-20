@@ -18,7 +18,7 @@ from ..schemas.common import LatestSymptoms,AllSymptoms
 class PatientServices():
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=10)->list[Patient]:
-        statement = select(Patient).offset((page-1)*limit).limit(limit)
+        statement = select(Patient).options(selectinload(Patient.doctor)) .offset((page-1)*limit).limit(limit)
         result = await session.exec(statement)
         return result.all() 
     

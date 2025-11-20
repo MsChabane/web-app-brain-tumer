@@ -28,7 +28,7 @@ async def create_patient(data: NewPatient, session: db_dependency):
     if user is not None :
         raise HTTPException(detail='User is already exist.',status_code=status.HTTP_400_BAD_REQUEST)
     
-    user =  user_services.add(UserCreate(**data.user.model_dump(),role=Role.PATIENT),session)
+    user =  user_services.add(UserCreate(**data.user.model_dump(),password=data.user.phone_number,role=Role.PATIENT),session)
 
     
     patient= await patient_services.add(PatientCreate(**data.patient.model_dump(),user_id=user.id),session)
@@ -38,12 +38,13 @@ async def create_patient(data: NewPatient, session: db_dependency):
 @router.get("/all",response_model=List[PatientOut],dependencies=[only_admins])
 async def get_all_patients(session:db_dependency,page:Optional[int]=1,limit:Optional[int]=10):
     patients= await patient_services.get_all(session=session,page=page,limit=limit)
+    print(patients)
     return patients  
 
 @router.get("/me",response_model=PatientOut)
 async def me(session:db_dependency,current_user=only_patients):
     patient =await patient_services.get_by_user_id(current_user.id,session)
-    
+    print(patient)
     return patient
 
 @router.get("/get-latest-symptoms",response_model=LatestSymptoms)

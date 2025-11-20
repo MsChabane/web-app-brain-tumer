@@ -230,9 +230,9 @@
         <input type="tel" id="doctor-phone" placeholder="+213xxxxxxxxx">
 
         <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
-          <button class="btn-add" id="submit-doctor-btn-add" onclick="submitDoctor()">
-            <span id="doctor-submit-text-add">Submit</span>
-            <span id="doctor-submit-spinner-add" class="spinner" style="display:none;"></span>
+          <button class="btn-add" id="submit-doctor-btn" onclick="submitDoctor()">
+            <span id="doctor-submit-text">Submit</span>
+            <span id="doctor-submit-spinner" class="spinner" style="display:none;"></span>
           </button>
           <button class="btn-delete" onclick="closeModal('add-doctor-modal')">Cancel</button>
         </div>
@@ -278,6 +278,7 @@
         </div>
       </div>
     </div>
+
 
     <script src="/static/js/notification.js"></script>
     <script src="/static/js/admin.js"></script>

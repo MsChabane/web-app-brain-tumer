@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from pydantic.generics import GenericModel
 from .DoctorSchemas import DoctorBase
 from typing import List,TypeVar,Generic,Optional
 from .PatientSchemas import PatientBase
@@ -33,7 +32,7 @@ class AllSymptoms(BaseModel):
 
 
 T = TypeVar("T")
-class Message(GenericModel, Generic[T]):
+class Message(BaseModel, Generic[T]):
     message: str
     data: Optional[T]=None
     

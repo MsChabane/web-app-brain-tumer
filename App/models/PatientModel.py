@@ -26,7 +26,7 @@ class Patient(SQLModel, table=True):
     user_id: UUID = Field(foreign_key="user.id", nullable=False,unique=True)
     user: User = Relationship(back_populates="patient")
     doctor_id: Optional[UUID] = Field(nullable=True, foreign_key="doctor.id")
-    doctor: Optional[Doctor] = Relationship(back_populates="patients")
+    doctor: Optional[Doctor] = Relationship(back_populates="patients",sa_relationship_kwargs={"lazy": "joined"})
     created_at: datetime = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )

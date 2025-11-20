@@ -118,6 +118,7 @@ async def associate(patient_id:UUID,doctor_id:UUID,session:db_dependency):
         raise HTTPException(detail='Doctor is not exist.',status_code=status.HTTP_404_NOT_FOUND)
     patient = await patient_services.associate_to_doctor(patient,doctor_id,session)
     await session.commit()
+    await session.refresh(patient)
     return patient
 
 @router.put("/{id}",response_model=PatientOut)

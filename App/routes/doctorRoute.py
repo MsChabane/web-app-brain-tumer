@@ -104,6 +104,3 @@ async def delete_doctor(id:UUID,session:db_dependency):
     
     
 
-
-
-

@@ -70,8 +70,8 @@ class PatientServices():
             setattr(model,k,v)
         return model
     
-    async def update_status(self,patient:Patient,status:PatientUpdateStatus,session:AsyncSession):
-        patient= self._update(patient,status)
+    async def update_state(self,patient:Patient,new_state:PatientUpdateStatus,session:AsyncSession):
+        patient= self._update(patient,new_state)
         session.add(patient)
         return patient
         
@@ -120,12 +120,12 @@ class PatientServices():
         )
         return (await session.exec(stmt)).first()
     
-    async def _get_latest_general_symptoms(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_general_symptoms(self,patient_id:str,session:AsyncSession)->GeneralSymptoms|None:
         return await self._get_latest(GeneralSymptoms,patient_id,session)
     
-    async def _get_latest_specific_symptoms(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_specific_symptoms(self,patient_id:str,session:AsyncSession)->SpecificSymptoms|None:
         return await self._get_latest(SpecificSymptoms,patient_id,session)
-    async def _get_latest_radio_image(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_radio_image(self,patient_id:str,session:AsyncSession)->RadioImage|None:
         return await self._get_latest(RadioImage,patient_id,session)
     
                     
@@ -137,9 +137,9 @@ class PatientServices():
         )
         
         return LatestSymptoms(
-            general_symptoms=GeneralSymptomsBase(gs) if gs else None,
-    specific_symtoms=SpecificSymptomsBase(ss) if ss else None,
-    radio_image=RadioImageBase(rd) if rd else None
+            general_symptoms=gs.model_dump() if gs else None,
+    specific_symtoms=ss.model_dump() if ss else None,
+    radio_image=rd.model_dump()  if rd else None
         ) 
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):

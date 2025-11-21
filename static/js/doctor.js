@@ -19,7 +19,6 @@ const tabContents = document.querySelectorAll(".tab-content");
 const check_table = document.getElementById("checks-table");
 const patient_tabke = document.getElementById("patients-table");
 
-
 tabLinks.forEach((link) => {
 	link.addEventListener("click", (e) => {
 		e.preventDefault();
@@ -63,12 +62,4 @@ function add_patient_to_table(patient) {
               <button class="btn-add" onclick="openModal('add-rd-modal')">Add RI</button>
             </td>`;
 	patient_tabke.appendChild(tr);
-
 }
-
-add_patient_to_table({
-    
-})
-
-
-

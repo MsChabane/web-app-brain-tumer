@@ -4,9 +4,9 @@ from ..db.db import AsyncSession
 from ..models.DoctorModel import Doctor
 from ..schemas.DoctorSchemas import DoctorCreate,DoctorUpdate
 from ..schemas.common import LatestSymptoms
-
+from ..schemas.PatientSchemas import PatientUpdateStatus
 from ..models.PatientModel import Patient
-
+from ..schemas.types import Binary,Seizures,FinalStateEnum,Four_Classes
 
 
 class DoctorServices:
@@ -22,9 +22,7 @@ class DoctorServices:
         doctor = await session.get(Doctor, doctor_id)
         return doctor 
     
-    async def get_with_patients(self,doctor_id:str,session:AsyncSession):
-        doctor =await session.get(Doctor, doctor_id)
-        return doctor
+    
         
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):
@@ -43,16 +41,6 @@ class DoctorServices:
         doctor = (await session.exec(statement)).first()
         return doctor
     
-    def to_check(self,patient:Patient,latest_symptoms:LatestSymptoms)->bool:
-        if not( latest_symptoms.general_symptoms and latest_symptoms.radio_image):
-            return False
-        return patient.age >62 and \
-            patient.antecedents > 0 and \
-            latest_symptoms.general_symptoms.seizures == 2 and \
-            latest_symptoms.general_symptoms.drowsiness == 1 and \
-            latest_symptoms.radio_image.type >= 2
-             
-
     async def detete(self,doctor:Doctor,session:AsyncSession):
         result = await session.exec(select(Patient).where(Patient.doctor_id == doctor.id))
         patients = result.all()
@@ -61,8 +49,30 @@ class DoctorServices:
             session.add(patient)
         await session.delete(doctor)
         
-
-
+    def to_check(self,patient:Patient,latest_symptoms:LatestSymptoms)->bool:
+        if latest_symptoms.general_symptoms is None and latest_symptoms.specific_symtoms is None and  latest_symptoms.radio_image is None :
+            return None
+        rd=latest_symptoms.radio_image
+        gs=latest_symptoms.general_symptoms
+        ss=latest_symptoms.specific_symtoms
+        
+        if patient.age >62 and patient.antecedents > 0 and gs and gs.seizures == 2 and  gs.drowsiness == 1 and rd and rd.type >= 2:
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.TWO,final_state=FinalStateEnum.T) 
+        if  ss and gs and ss.pressure >=2 and gs.fatigue == 2 and gs.memory_pb >=2 :
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.ONE,final_state=FinalStateEnum.D)
+        if ss and gs and ss.balance_loss ==1 and  ss.muscle >=2 and patient.age >50:
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.TWO,final_state=FinalStateEnum.T)
+        if ss and gs  and ss.judgment_degradation >=2 and ss.sense_degradation >= 2 and gs.seizures==Seizures.TC :
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.TWO,final_state=FinalStateEnum.T)
+        if gs and rd and gs.seizures ==Seizures.M and gs.fatigue <=1 and rd.type== 0 :
+            return PatientUpdateStatus(tumor_status=Binary.ZERO,hospitalisation=Four_Classes.ZERO,final_state=FinalStateEnum.N)
+        if gs and gs.drowsiness == 2 and ss and ss.pressure >=2 and patient.gender > 55:
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.TWO,final_state=FinalStateEnum.T)
+        if gs and gs.fatigue == 2 and gs.memory_pb >= 1 and gs.seizures in [Seizures.TC, Seizures.S]:
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.ONE,final_state=FinalStateEnum.D)
+        if gs and ss and ss.muscle >=2 and ss.swallowing >=2 and rd and rd.type >=2:
+            return PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.THREE,final_state=FinalStateEnum.R)
+        return None
 
 
 

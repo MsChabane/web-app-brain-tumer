@@ -5,15 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="/static/css/doctor.css">
-  <link rel="stylesheet" href="/static/css/notification.css">
+  <link rel="stylesheet" href="/static/css/doctor.css?v={{version}}">
+  <link rel="stylesheet" href="/static/css/notifications.css?v={{version}}">
 </head>
 
 <body>
   <div class="notifications" id="notifications"></div>
   <div class="sidebar">
     <h2>UStay Doctor</h2>
-    <a href="#" class="tab-link" data-tab="patients">Patients</a>
+    <a href="#" class="tab-link active" data-tab="patients">Patients</a>
     <a href="#" class="tab-link" data-tab="checks">Checks</a>
   </div>
 
@@ -21,7 +21,7 @@
     <div id="notification" class="notification"></div>
 
     <!-- Patients Tab -->
-    <div class="tab-content" id="patients-tab" style="display:none;">
+    <div class="tab-content" id="patients-tab">
       <div>
         <h2>Patients</h2>
 
@@ -251,7 +251,7 @@
 
 
 </body>
-<script src="/static/js/notification.js"></script>
-<script src="/static/js/doctor.js"></script>
+<script src="/static/js/notification.js?v={{version}}"></script>
+<script src="/static/js/doctor.js?v={{version}}"></script>
 
 </html>

@@ -68,3 +68,26 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.badge-positive {
+    background: #d53838;
+    color: #fff;
+}
+
+.badge-negative {
+    background: #2d9925;
+    color: #fff;
+}
+
+.badge-null {
+    background: #a07313;
+    color: #fff;
+}

@@ -66,6 +66,7 @@ function add_doctor_to_table(doctor) {
             </td>`;
 	doctor_table.appendChild(tr);
 }
+
 function add_patient_to_table(patient) {
 	const tr = document.createElement("tr");
 	tr.id = patient.id;
@@ -73,7 +74,15 @@ function add_patient_to_table(patient) {
 	<td>${patient.gender == "M" ? "Male" : "Female"}</td>
 	<td>${patient.age}</td>
             <td>${patient.antecedents}</td>
-            <td>${patient.tumor_status || "-"}</td>
+            <td>${
+							patient.tumor_status !== null
+								? `<span class='badge badge-${
+										patient.tumor_status == 0 ? "negative" : "positive"
+								  }'>${
+										patient.tumor_status == 0 ? "negative" : "positive"
+								  }<span>`
+								: "-"
+						}</td>
             <td>${patient.hospitalisation || "-"}</td>
             <td>${patient.final_state || "-"}</td>
             <td>
@@ -94,7 +103,6 @@ function add_doctor_to_list(doctor) {
 }
 
 function open_associate_modal(id) {
-	console.log(id);
 	document.getElementById("patient-to-associate").value = id;
 	openModal("associate-modal");
 }
@@ -106,7 +114,15 @@ function add_patient_no_asso_to_table(patient) {
 	<td>${patient.gender == "M" ? "Male" : "Female"}</td>
 	<td>${patient.age}</td>
             <td>${patient.antecedents}</td>
-            <td>${patient.tumor_status || "-"}</td>
+            <td>${
+							patient.tumor_status !== null
+								? `<span class='badge badge-${
+										patient.tumor_status == 0 ? "negative" : "positive"
+								  }'>${
+										patient.tumor_status == 0 ? "negative" : "positive"
+								  }<span>`
+								: "-"
+						}</td>
             <td>${patient.hospitalisation || "-"}</td>
             <td>${patient.final_state || "-"}</td>
 			<td>${patient.doctor ? patient.doctor.name : "-"}</td>
@@ -170,7 +186,23 @@ function add_user_to_table(user) {
 	const tr = document.createElement("tr");
 	tr.id = user.id;
 	tr.innerHTML = `<td>${user.phone_number}</td>
-            <td>${user.role}</td>`;
+            <td>
+							
+				 <span class='badge badge-${
+						user.role == "admin"
+							? "positive"
+							: user.role === "doctor"
+							? "negative"
+							: "null"
+					}'>${user.role}<span>
+								
+						</td>
+		${
+			user.role === "admin"
+				? `<td><button class="btn-delete" onclick="openDeleteModal('Are you sure you want to delete this admin?','${user.id}','admin')">Delete</button></td>	`
+				: "-"
+		}
+					`;
 	user_table.appendChild(tr);
 }
 
@@ -558,7 +590,7 @@ async function delete_(role, id) {
 	spinner.style.display = "inline-block";
 
 	await _call(
-		`/${role}/${id}`,
+		role === "admin" ? `/auth/users/admin/${id}` : `/${role}/${id}`,
 		"DELETE",
 		undefined,
 		(data) => {

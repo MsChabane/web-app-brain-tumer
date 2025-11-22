@@ -27,14 +27,16 @@ form.addEventListener("submit", async (e) => {
 		if (res.ok) {
 			localStorage.setItem("token", data.access_token);
 			localStorage.setItem("role", data.role);
+			submitBtn.disabled = false;
 			const role = data.role;
+
 			if (role === "admin") window.location.href = "/admin";
 			else if (role === "doctor") window.location.href = "/doctor";
 			else window.location.href = "/patient";
 
 			return;
 		} else {
-			showNotification(data.detail, false, 1000);
+			showNotification(data.detail, false);
 		}
 		submitBtn.disabled = false;
 	} catch (err) {

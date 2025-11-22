@@ -55,7 +55,13 @@ function fill_table_patient(patient) {
             <tr>
                 <th>Tumor Status</th>
                 <td>${
-									patient.tumor_status != null ? patient.tumor_status : "-"
+									patient.tumor_status !== null
+										? `<span class='badge badge-${
+												patient.tumor_status == 0 ? "negative" : "positive"
+										  }'>${
+												patient.tumor_status == 0 ? "negative" : "positive"
+										  }<span>`
+										: "-"
 								}</td>
             </tr>
             <tr>

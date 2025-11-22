@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - UStay</title>
 
-  <link rel="stylesheet" href="/static/css/admin.css">
-  <link rel="stylesheet" href="/static/css/notifications.css">
+  <link rel="stylesheet" href="/static/css/admin.css?v={{version}}">
+  <link rel="stylesheet" href="/static/css/notifications.css?v={{version}}">
 </head>
 
 <body>
@@ -48,17 +48,19 @@
         <h2>Users</h2>
         <button class="btn-add" onclick="openModal('add-admin-modal')">Add Admin</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Phone</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody id="users-table">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Phone</th>
+              <th>Role</th>
+            </tr>
+          </thead>
+          <tbody id="users-table">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Patients Tab -->
     <div class="tab-content" id="patients-tab" style="display:none;">
@@ -66,50 +68,54 @@
         <h2>Patients</h2>
         <button class="btn-add" onclick="openModal('add-patient-modal')">Add Patient</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Antecedents</th>
-            <th>Tumor Status</th>
-            <th>Hospitalisation</th>
-            <th>Final State</th>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
 
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="patients-table">
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patients-table">
 
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Association tab -->
     <div class="tab-content" id="associations-tab" style="display:none;">
       <div class="header">
         <h2>Patients </h2>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Antecedents</th>
-            <th>Tumor Status</th>
-            <th>Hospitalisation</th>
-            <th>Final State</th>
-            <th>Doctor</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="patients-no-asso-table">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
+              <th>Doctor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patients-no-asso-table">
 
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Doctors Tab -->
     <div class="tab-content" id="doctors-tab" style="display:none;">
@@ -118,20 +124,22 @@
         <h2>Doctors</h2>
         <button class="btn-add" onclick="openModal('add-doctor-modal')">Add Doctor</button>
       </div>
-      <table>
-        <thead>
-          <tr>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
 
-            <th>Name</th>
-            <th>Specialty</th>
-            <th>Year of Eperiance</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="doctors-table">
+              <th>Name</th>
+              <th>Specialty</th>
+              <th>Year of Eperiance</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="doctors-table">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
 
 
@@ -327,8 +335,8 @@
     </div>
 
 
-    <script src="/static/js/notification.js"></script>
-    <script src="/static/js/admin.js"></script>
+    <script src="/static/js/notification.js?v={{version}}"></script>
+    <script src="/static/js/admin.js?v={{version}}"></script>
 </body>
 
 </html>

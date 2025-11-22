@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse,RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from .routes.authRoute import router as authrouter
 from .routes.dashbordRoute import router as dashrouter
@@ -12,11 +12,11 @@ from fastapi.exceptions import RequestValidationError
 import os
 from datetime import datetime
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # points to App/
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
-# verify paths
+
 
 
 
@@ -45,25 +45,26 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=422, content={'detail':f"{field}: {message}"})
 
 @app.get("/",response_class=HTMLResponse)
-def helth(request:Request):
-    return template.TemplateResponse('index.html',{'request':request})
+def helth():
+    return RedirectResponse(url="/auth/login")
+
 
 
 @app.get('/auth/login',response_class=HTMLResponse)
 def serve_login_page(request:Request):
-    return template.TemplateResponse("login.html",{'request':request })
+    return template.TemplateResponse("login.html",{'request':request ,'version':int(datetime.utcnow().timestamp())})
 
 @app.get('/admin',response_class=HTMLResponse)
 def serve_login_page(request:Request):
-    return template.TemplateResponse("admin.html",{'request':request})
+    return template.TemplateResponse("admin.html",{'request':request,'version':int(datetime.utcnow().timestamp())})
 
 @app.get('/doctor',response_class=HTMLResponse)
 def serve_login_page(request:Request):
-    return template.TemplateResponse("doctor.html",{'request':request})
+    return template.TemplateResponse("doctor.html",{'request':request,'version':int(datetime.utcnow().timestamp())})
 
 @app.get('/patient',response_class=HTMLResponse)
 def serve_login_page(request:Request):
-    return template.TemplateResponse("patient.html",{'request':request})
+    return template.TemplateResponse("patient.html",{'request':request,'version':int(datetime.utcnow().timestamp())})
 
 
 

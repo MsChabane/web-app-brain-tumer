@@ -19,6 +19,13 @@
     <a href="#" class="tab-link" data-tab="doctors">Doctors</a>
     <a href="#" class="tab-link" data-tab="patients">Patients</a>
     <a href="#" class="tab-link" data-tab="associations">Association</a>
+    <a href="#" class="tab-link" data-tab="profile">Profile</a>
+    <div class="sidebar-spacer"></div>
+
+
+    <button class="logout-btn" onclick="logout()">
+      Logout
+    </button>
   </div>
 
   <div class="main-content">
@@ -54,6 +61,7 @@
             <tr>
               <th>Phone</th>
               <th>Role</th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="users-table">
@@ -141,7 +149,20 @@
         </table>
       </div>
     </div>
+    <!-- profile Tab -->
+    <div class="tab-content" id="profile-tab" style="display:none;">
+      <div class="header">
+        <h2>Profile</h2>
+      </div>
 
+      <div class="profile-info" style="margin-bottom: 20px;">
+        <p><strong>Phone Number:</strong> <span id="user-phone"> - </span></p>
+        <p><strong>Role:</strong> <span id="user-role"> - </span></p>
+      </div>
+
+      <button class="btn-update" id="change-password-btn" onclick="openModal('change-password-modal')">Change
+        Password</button>
+    </div>
 
     <!-- add admin -->
     <div class="modal" id="add-admin-modal">
@@ -334,9 +355,31 @@
       </div>
     </div>
 
+    <div class="modal" id="change-password-modal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-password-modal" onclick="closeModal('change-password-modal')">&times;</span>
+        <h3>Change Password</h3>
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" placeholder="Enter new password">
 
-    <script src="/static/js/notification.js?v={{version}}"></script>
-    <script src="/static/js/admin.js?v={{version}}"></script>
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" placeholder="Confirm new password">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-changepwd-btn" onclick="change_password()">
+            <span id="changepwd-submit-text">Submit</span>
+            <span id="changepwd-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('change-password-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script src="/static/js/notification.js?v={{version}}"></script>
+  <script src="/static/js/admin.js?v={{version}}"></script>
 </body>
 
 </html>

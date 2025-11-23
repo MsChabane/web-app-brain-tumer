@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError 
 import os
 from datetime import datetime
+from uuid import UUID
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -65,6 +66,11 @@ def serve_login_page(request:Request):
 @app.get('/patient',response_class=HTMLResponse)
 def serve_login_page(request:Request):
     return template.TemplateResponse("patient.html",{'request':request,'version':int(datetime.utcnow().timestamp())})
+
+@app.get('/details/{patient_id}',response_class=HTMLResponse)
+def serve_login_page(patient_id:UUID,request:Request):
+    return template.TemplateResponse("detail.html",{'request':request,'id':patient_id,'version':int(datetime.utcnow().timestamp())})
+
 
 
 

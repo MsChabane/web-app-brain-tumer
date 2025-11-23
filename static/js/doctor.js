@@ -16,7 +16,6 @@ function getRole() {
 
 const tabLinks = document.querySelectorAll(".tab-link");
 const tabContents = document.querySelectorAll(".tab-content");
-const checks_table = document.getElementById("checks-table");
 const patients_table = document.getElementById("patients-table");
 
 tabLinks.forEach((link) => {
@@ -30,10 +29,7 @@ tabLinks.forEach((link) => {
 		if (tabId === "patients-tab") {
 			patients_table.innerHTML = ``;
 			fill_table_patients(add_patient_to_table);
-		} else if (tabId === "checks-tab") {
-			checks_table.innerHTML = ``;
-			fill_table_patients(add_patient_to_table_for_check);
-		} else if (tabId === "profile-tab") {
+		}  else if (tabId === "profile-tab") {
 			fill_user_info();
 		}
 	});
@@ -65,44 +61,24 @@ function add_patient_to_table(patient) {
             <td>${patient.hospitalisation || "-"}</td>
             <td>${patient.final_state || "-"}</td>
             <td>
-              <button class="btn-add" onclick="openModal('add-gs-modal')">Add GS</button>
-              <button class="btn-add" onclick="openModal('add-ss-modal')">Add SS</button>
-              <button class="btn-add" onclick="openModal('add-rd-modal')">Add RI</button>
+              <button class="btn-add" onclick="open_detail('${patient.id}')">View</button>
             </td>`;
 	patients_table.appendChild(tr);
 }
 
-function add_patient_to_table_for_check(patient) {
-	const tr = document.createElement("tr");
-	tr.dataset.patientId = patient.id;
-	tr.innerHTML = `<td>${patient.name + " " + patient.surname} </td>
-	<td>${patient.gender == "M" ? "Male" : "Female"}</td>
-	<td>${patient.age}</td>
-            <td>${patient.antecedents}</td>
-            <td>${
-							patient.tumor_status !== null
-								? `<span class='badge badge-${
-										patient.tumor_status == 0 ? "negative" : "positive"
-								  }'>${
-										patient.tumor_status == 0 ? "negative" : "positive"
-								  }<span>`
-								: "-"
-						}</td>
-            <td>${patient.hospitalisation || "-"}</td>
-            <td>${patient.final_state || "-"}</td>
-            <td>
-              <button class="btn-add" onclick="alert('check')">Check</button>
-            </td>`;
-	checks_table.appendChild(tr);
+
+async function open_detail (id){
+	window.location.href=`/details/${id}`
 }
 
-async function fill_table_patients(callback) {
+
+async function fill_table_patients() {
 	await _call(
 		"/doctor/get-patients",
 		"GET",
 		undefined,
 		(data) => {
-			data.forEach((element) => callback(element));
+			data.forEach((element) => add_patient_to_table(element));
 		},
 		() => {}
 	);

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+    <link rel="stylesheet" href="/static/css/detail.css?v={{version}}">
+    <link rel="stylesheet" href="/static/css/notifications.css?v={{version}}">
+</head>
+<body>
+    <main class="main-content">
+        <div class="notification" id="notification"></div>
+        <!-- info-tab -->
+        <div class=""  id="info-tab">
+            <h2>Personal Information</h2>
+            <input type="hidden" value="{{id}}" id="patient-id"/>
+            <table class="info-table" id="patient-info">
+            </table>
+            </div>
+    </main>
+     <script src="/static/js/detail.js?v={{version}}"></script>
+    <script src="/static/js/notification.js?v={{version}}"></script>
+</body>
+</html>

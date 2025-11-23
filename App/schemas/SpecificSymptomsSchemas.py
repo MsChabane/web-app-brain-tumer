@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,ConfigDict
 from uuid import UUID
 from .types import Three_Classes,Four_Classes,Binary
 from typing import Optional
-
+from datetime import datetime
 
 class SpecificSymptomsBase(BaseModel):
     pressure: Four_Classes
@@ -19,6 +19,8 @@ class SpecificSymptomsCreate(SpecificSymptomsBase):
     
 class SpecificSymptomsOut(SpecificSymptomsBase):
     id:UUID
+    created_at:datetime
+    model_config = ConfigDict(from_attributes=True)
     
     
 class SpecificSymptomsUpdate(BaseModel):

@@ -1,8 +1,11 @@
-const personel_info = document.getElementById("personel_info");
+const patient_info_table = document.getElementById("patient-info");
+const gs_info_table = document.getElementById("general-symptoms-info");
+const ss_info_table = document.getElementById("specific-symptoms-info");
+const rd_info_table = document.getElementById("radio-image-info");
+
 function getRole() {
 	const token = localStorage.getItem("token");
 	const role = localStorage.getItem("role");
-
 	if (!token || !role) {
 		window.location.href = "/auth/login";
 		return;
@@ -27,111 +30,192 @@ function logout() {
 	window.location.href = "/login";
 }
 
-function back_to_login(message) {
-	pushNotification(message, "error", 2000);
-	setTimeout(() => {
-		window.location.href = "/auth/login";
-	}, 2000);
+function fill_table_patient(patient) {
+	patient_info_table.innerHTML = `
+	<tr>
+        <th>Name</th>
+         <td>${patient.name}</td>
+    </tr>
+    <tr>
+        <th>Surname</th>
+        <td>${patient.surname}</td>
+    </tr>
+            <tr>
+                <th>Age</th>
+                <td>${patient.age}</td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>${patient.gender == "M" ? "Male" : "Female"}</td>
+            </tr>
+            <tr>
+                <th>Antecedents</th>
+                <td>${patient.antecedents}</td>
+            </tr>
+            <tr>
+                <th>Tumor Status</th>
+                <td>${
+									patient.tumor_status != null ? patient.tumor_status : "-"
+								}</td>
+            </tr>
+            <tr>
+                <th>Hospitalisation</th>
+                <td>${
+									patient.hospitalisation != null
+										? patient.hospitalisation
+										: "-"
+								}</td>
+            </tr>
+            <tr>
+                <th>Final State</th>
+                <td>${
+									patient.final_state != null ? patient.final_state : "-"
+								}</td>
+            </tr>
+							${
+								patient.doctor
+									? `
+		<tr>
+                <th>Doctor</th>
+                <td>${patient.doctor.name}</td>
+        </tr>
+		`
+									: ""
+							}
+            
+			`;
 }
 
-async function getPatientInfos() {
+async function _call(uri, method, body = undefined, success, failed) {
 	const token = localStorage.getItem("token");
-	if (!token) {
-		back_to_login("Don't have access");
-		return;
-	}
-	const res = await fetch("/patient/me", {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`,
-		},
-	});
-	const data = await res.json();
-	if (res.ok) {
-		personel_info.innerHTML += `<div class="info-item"><span>Name:</span> ${data.name}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Surname:</span> ${data.surname}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Age:</span> ${data.age}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Gender:</span> ${
-			data.gender == "M" ? "Male" : "Female"
-		}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Antecedents:</span> ${data.antecedents}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Tumor status:</span> ${data.tumor_status}</div>`;
-		personel_info.innerHTML += `<div class="info-item"><span>Final state:</span> ${data.final_state}</div>`;
-		return;
-	} else {
-		back_to_login(data.detail);
+	try {
+		const res = await fetch(uri, {
+			method: method,
+			body: body ? JSON.stringify(body) : body,
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		const data = await res.json();
+		if (res.ok) {
+			success(data);
+		} else {
+			if (res.status === 401) {
+				showNotification("session expire ! log in again...");
+				localStorage.removeItem("token");
+				localStorage.removeItem("role");
+				setTimeout(() => (window.location.href = "/auth/login"), 3000);
+			} else {
+				showNotification(data.detail);
+				failed();
+			}
+		}
+	} catch (err) {
+		showNotification("Network error");
+		console.log(err);
 	}
 }
 
-async function getallsymptons() {
-	const token = localStorage.getItem("token");
-	console.log(token);
-	if (!token) {
-		back_to_login("Don't have access");
-		return;
-	}
-	const res = await fetch("/patient/get-all-symptoms", {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${token}`,
-		},
-	});
-	const data = await res.json();
-	console.log(data);
-	if (res.ok) {
+_call(
+	"/patient/me",
+	"GET",
+	undefined,
+	(data) => {
 		console.log(data);
+		fill_table_patient(data);
+	},
+	() => {}
+);
+_call(
+	"patient/get-latest-symptoms",
+	"GET",
+	undefined,
+	(data) => {
+		console.log(data);
+		fill_table_general_symptoms(data.general_symptoms);
+		fill_table_specific_symptoms(data.specific_symptoms);
+		fill_table_radio_image(data.radio_image);
+	},
+	() => {}
+);
 
-		fill_general_symotoms(data.general_symptoms);
-		fill_specific_symptoms(data.specific_symtoms);
-		fill_radio_images_table(data.radio_images);
-		return;
+function fill_table_general_symptoms(general_symptoms) {
+	if (general_symptoms) {
+		gs_info_table.innerHTML = `
+	<tr>
+    	<th>Headaches</th>
+        <td>${general_symptoms.headaches}</td>
+    </tr>
+    <tr>
+        <th>Seizures</th>
+         <td>${general_symptoms.seizures}</td>
+    </tr>
+    <tr>
+        <th>Fatigue</th>
+        <td>${general_symptoms.fatigue}</td>
+    </tr>
+    <tr>
+        <th>Drowsiness</th>
+       <td>${general_symptoms.drowsiness}</td>
+    </tr>
+    <tr>
+        <th>Sleep Problems</th>
+       <td>${general_symptoms.sleep_pb}</td>
+    </tr>
+    <tr>
+        <th>Memory Problems</th>
+       <td>${general_symptoms.memory_pb}</td>
+    </tr> `;
 	} else {
-		back_to_login(data.detail);
+		gs_info_table.innerHTML = `<tr><th> No General Symptoms added. </th></tr > `;
 	}
 }
 
-function fill_general_symotoms(gs) {
-	const gs_table = document.getElementById("table-general-symtoms");
-	gs_table.innerHTML = "";
-	gs.forEach((e) => {
-		gs_table.innerHTML += `<tr>
-                     <td>${e.headaches}</td>
-                    <td>${e.seizures}</td>
-                    <td>${e.fatigue}</td>
-                    <td>${e.drowsiness}</td>
-                    <td>${e.memory_pb}</td>
-                    <td>${e.memory_pb}</td>
-                </tr>`;
-	});
+function fill_table_specific_symptoms(specific_symptoms) {
+	if (specific_symptoms) {
+		ss_info_table.innerHTML = `
+	<tr>
+    <th>Pressure</th>
+        <td>${specific_symptoms.pressure}</td>
+    </tr>
+    <tr>
+        <th>Balance Loss</th>
+       <td>${specific_symptoms.balance_loss}</td>
+    </tr>
+    <tr>
+        <th>Judgment Degradation</th>
+       <td>${specific_symptoms.judgment_degradation}</td>
+    </tr>
+    <tr>
+        <th>Sense Degradation</th>
+        <td>${specific_symptoms.sense_degradation}</td>
+    </tr>
+    <tr>
+        <th>Lactation</th>
+      <td>${specific_symptoms.lactation}</td>
+    </tr>
+    <tr>
+        <th>Swallowing</th>
+     <td>${specific_symptoms.swallowing}</td>
+    </tr>
+    <tr>
+        <th>Muscle Issues</th>
+      <td>${specific_symptoms.muscle}</td>
+    </tr>`;
+	} else {
+		ss_info_table.innerHTML = `<tr><th> No Specific Symptoms added. </th></tr > `;
+	}
 }
-function fill_specific_symptoms(ss) {
-	const ss_table = document.getElementById("table-specific-symptoms");
-	ss_table.innerHTML = "";
-	ss.forEach((e) => {
-		ss_table.innerHTML += `<tr>
-                    <td>${e.pressure}</td>
-                    <td>${e.balance_loss} loss</td>
-                    <td>${e.judgment_degradation}</td>
-                    <td>${e.sense_degradation}</td>
-                    <td>${e.lactation}</td>
-                    <td>${e.swallowing}</td>
-                    <td>${e.muscle}</td>
-                </tr>`;
-	});
+function fill_table_radio_image(rd_image) {
+	if (rd_image) {
+		rd_info_table.innerHTML = `
+	<tr>
+        <th>Type</th>
+      <td>${rd_image.type}</td>
+    </tr>
+	`;
+	} else {
+		rd_info_table.innerHTML = `<tr><th> No Radio images added. </th></tr > `;
+	}
 }
-
-function fill_radio_images_table(rd) {
-	const rd_table = document.getElementById("table-radio-image");
-	rd_table.innerHTML = "";
-	rd.forEach((e) => {
-		rd_table.innerHTML += `<tr>
-                    <td>${e.type}</td>
-                </tr>`;
-	});
-}
-
-getRole();
-getPatientInfos();
-getallsymptons();

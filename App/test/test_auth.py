@@ -65,7 +65,7 @@ def test_get_all_users_admin(client_with_auth_admin, mock_session, fake_user_lis
         limit=2
     )
 
-import pytest
+
 
 def test_profile_patient(client_with_auth_patient):
     response = client_with_auth_patient.post("/auth/profile")

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,425 @@
     <link rel="stylesheet" href="/static/css/detail.css?v={{version}}">
     <link rel="stylesheet" href="/static/css/notifications.css?v={{version}}">
 </head>
+
 <body>
     <main class="main-content">
         <div class="notification" id="notification"></div>
-        <!-- info-tab -->
-        <div class=""  id="info-tab">
-            <h2>Personal Information</h2>
-            <input type="hidden" value="{{id}}" id="patient-id"/>
+        <div class="loading-box" id="loader">
+            <div class="loader-spinner"></div>
+            <span>Checking for the patient...</span>
+        </div>
+        <div class="section">
+            <div class="header">
+                <h2>Patient information </h2>
+                <button class="btn-add" onclick="check()">Check Patient</button>
+            </div>
             <table class="info-table" id="patient-info">
             </table>
+        </div>
+        <hr>
+        <div class="section">
+            <div class="header">
+                <h2>General Symptoms </h2>
+                <button class="btn-add" onclick="openModal('add-gs-modal')"> Add General Symptoms</button>
             </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Headaches</th>
+                            <th>seizures</th>
+                            <th>fatigue</th>
+                            <th>drowsiness</th>
+                            <th>Sleep problem</th>
+                            <th>Memory problem</th>
+                            <th>Creadted</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="gs-table">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <hr>
+        <div class="section">
+            <div class="header">
+                <h2>Specific Symptoms </h2>
+                <button class="btn-add" onclick="openModal('add-ss-modal')"> Add Specific Symptoms</button>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Pressure</th>
+                            <th>Balance loss</th>
+                            <th>Judgment Degradation</th>
+                            <th>Sense Degradation</th>
+                            <th>Lactation</th>
+                            <th>Swallowing</th>
+                            <th>Muscle</th>
+                            <th>Creadted</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ss-table">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <hr>
+        <div class="section">
+            <div class="header">
+                <h2>Radio Image </h2>
+                <button class="btn-add" onclick="openModal('add-rd-modal')"> Add Radio Image </button>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Created</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="rd-table">
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </main>
-     <script src="/static/js/detail.js?v={{version}}"></script>
+
+    <div class="modal" id="add-gs-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('add-gs-modal')">&times;</span>
+            <h3>Add General Symptoms</h3>
+
+            <label for="gs-headaches-add">Headaches</label>
+            <select id="gs-headaches-add">
+                <option value="">Select Headaches</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-seizures-add">Seizures</label>
+            <select id="gs-seizures-add">
+                <option value="">Select Seizures</option>
+                <option value="M">M</option>
+                <option value="TC">TC</option>
+                <option value="C">C</option>
+                <option value="S">S</option>
+            </select>
+
+            <label for="gs-fatigue-add">Fatigue</label>
+            <select id="gs-fatigue-add">
+                <option value="">Select Fatigue</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-drowsiness-add">Drowsiness</label>
+            <select id="gs-drowsiness-add">
+                <option value="">Select Drowsiness</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-sleep_pb-add">Sleep problems</label>
+            <select id="gs-sleep_pb-add">
+                <option value="">Select Sleep problems</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-memory_pb-add">Memory problems</label>
+            <select id="gs-memory_pb-add">
+                <option value="">Select Memory problems</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-gs-btn" onclick="add_general_symtoms()">
+                    <span id="gs-submit-text">Submit</span>
+                    <span id="gs-submit-spinner" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('add-gs-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- add Spec Symp -->
+    <div class="modal" id="add-ss-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('add-ss-modal')">&times;</span>
+            <h3>Add Specific Symptoms</h3>
+
+            <label for="ss-pressure-add">Pressure</label>
+            <select id="ss-pressure-add">
+                <option value="">Select Pressure</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-balance_loss-add">Balance loss</label>
+            <select id="ss-balance_loss-add">
+                <option value="">Select Balance loss</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+
+            <label for="ss-judgment_degradation-add">Judgment degradation</label>
+            <select id="ss-judgment_degradation-add">
+                <option value="">Select Judgment degradation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-sense_degradation-add">Sense degradation</label>
+            <select id="ss-sense_degradation-add">
+                <option value="">Select Sense degradation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-lactation-add">Lactation</label>
+            <select id="ss-lactation-add">
+                <option value="">Select Lactation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="ss-swallowing-add">Swallowing</label>
+            <select id="ss-swallowing-add">
+                <option value="">Select Swallowing</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-muscle-add">Muscle</label>
+            <select id="ss-muscle-add">
+                <option value="">Select Muscle</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-ss-btn" onclick="add_specific_symtoms()">
+                    <span id="ss-submit-text">Submit</span>
+                    <span id="ss-submit-spinner" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('add-ss-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- add Radio Image -->
+    <div class="modal" id="add-rd-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('add-rd-modal')">&times;</span>
+            <h3>Add Radio Image Type</h3>
+            <label for="rd-type-add">Radio Image Type</label>
+            <input type="number" id="rd-type-add" placeholder="Radio Image Type" min="0">
+
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-rd-btn" onclick="add_radio_image_symtoms()">
+                    <span id="rd-submit-text">Submit</span>
+                    <span id="rd-submit-spinner" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('add-rd-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- update general-symtoms -->
+    <div class="modal" id="update-gs-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('update-gs-modal')">&times;</span>
+            <h3>Update General Symptoms</h3>
+            <input type="hidden" id="gs-id" />
+            <label for="gs-headaches-update">Headaches</label>
+            <select id="gs-headaches-update">
+                <option value="">Select Headaches</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-seizures-update">Seizures</label>
+            <select id="gs-seizures-update">
+                <option value="">Select Seizures</option>
+                <option value="M">M</option>
+                <option value="TC">TC</option>
+                <option value="C">C</option>
+                <option value="S">S</option>
+            </select>
+
+            <label for="gs-fatigue-update">Fatigue</label>
+            <select id="gs-fatigue-update">
+                <option value="">Select Fatigue</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-drowsiness-update">Drowsiness</label>
+            <select id="gs-drowsiness-update">
+                <option value="">Select Drowsiness</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-sleep_pb-update">Sleep problems</label>
+            <select id="gs-sleep_pb-update">
+                <option value="">Select Sleep problems</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="gs-memory_pb-update">Memory problems</label>
+            <select id="gs-memory_pb-update">
+                <option value="">Select Memory problems</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-gs-btn-update" onclick="update_general_symtoms()">
+                    <span id="gs-submit-text-update">Submit</span>
+                    <span id="gs-submit-spinner-update" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('update-gs-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Spec Symp -->
+    <div class="modal" id="update-ss-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('update-ss-modal')">&times;</span>
+            <h3>Update Specific Symptoms</h3>
+            <input type="hidden" id="ss-id" />
+            <label for="ss-pressure-update">Pressure</label>
+            <select id="ss-pressure-update">
+                <option value="">Select Pressure</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-balance_loss-update">Balance loss</label>
+            <select id="ss-balance_loss-update">
+                <option value="">Select Balance loss</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+
+            <label for="ss-judgment_degradation-update">Judgment degradation</label>
+            <select id="ss-judgment_degradation-update">
+                <option value="">Select Judgment degradation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-sense_degradation-update">Sense degradation</label>
+            <select id="ss-sense_degradation-update">
+                <option value="">Select Sense degradation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-lactation-update">Lactation</label>
+            <select id="ss-lactation-update">
+                <option value="">Select Lactation</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+
+            <label for="ss-swallowing-update">Swallowing</label>
+            <select id="ss-swallowing-update">
+                <option value="">Select Swallowing</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+            <label for="ss-muscle-update">Muscle</label>
+            <select id="ss-muscle-update">
+                <option value="">Select Muscle</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+
+
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-ss-btn-update" onclick="update_specific_symtoms()">
+                    <span id="ss-submit-text-update">Submit</span>
+                    <span id="ss-submit-spinner-update" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('update-ss-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- update Radio Image -->
+    <div class="modal" id="update-rd-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('update-rd-modal')">&times;</span>
+            <h3>Update Radio Image Type</h3>
+            <input type="hidden" id="rd-id" />
+            <label for="rd-type-update">Radio Image Type</label>
+            <input type="number" id="rd-type-update" placeholder="Radio Image Type" min="0">
+
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+                <button class="btn-add" id="submit-rd-btn-update" onclick="update_radio_image_symtoms()">
+                    <span id="rd-submit-text-update">Submit</span>
+                    <span id="rd-submit-spinner-update" class="spinner" style="display:none;"></span>
+                </button>
+                <button class="btn-delete" onclick="closeModal('update-rd-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/detail.js?v={{version}}"></script>
     <script src="/static/js/notification.js?v={{version}}"></script>
 </body>
+
 </html>

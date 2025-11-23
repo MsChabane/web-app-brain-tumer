@@ -8,11 +8,12 @@ from ..schemas.GeneralSymptomsSchemas import GeneralSymptomsBase,GeneralSymptoms
 from ..schemas.SpecificSymptomsSchemas import SpecificSymptomsCreate,SpecificSymptomsBase,SpecificSymptomsOut,SpecificSymptomsUpdate
 from ..schemas.RadioImageSchemas import RadioImageCreate,RadioImageBase,RadioImageOut
 from ..schemas.common import AllSymptoms,Message,NewPatient,LatestSymptoms
-from ..dependancies.auth import only_admins,only_patients
+from ..dependancies.auth import only_admins,only_patients,only_doctors
 from ..schemas.types import Role
 from typing import List ,Optional
 from uuid import UUID
 from ..dependancies.common import db_dependency
+from ..models.UserModel import User
 
 router = APIRouter()
 user_services=UserServices()
@@ -26,7 +27,7 @@ async def create_patient(data: NewPatient, session: db_dependency):
 
     user = await user_services.get_by_phone_number(data.user.phone_number,session)
     if user is not None :
-        raise HTTPException(detail='User is already exist.',status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(detail='User is already found.',status_code=status.HTTP_400_BAD_REQUEST)
     
     user =  user_services.add(UserCreate(**data.user.model_dump(),password=data.user.phone_number,role=Role.PATIENT),session)
 
@@ -51,7 +52,7 @@ async def me(session:db_dependency,current_user=only_patients):
 async def get_latest_symtoms_(session:db_dependency,current_user=only_patients):
     patient = await patient_services.get_by_user_id(str(current_user.id),session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
     latest_symp=await patient_services.get_latest_infos(patient.id,session)
     
     return latest_symp 
@@ -61,11 +62,18 @@ async def get_no_associated(session:db_dependency):
     return await patient_services.get_no_associated_patients(session)
     
 
-@router.get("{patient_id}/get-all-symptoms",response_model=AllSymptoms,dependencies=[only_admins])
-async def get_all_symtoms_(patient_id:UUID,session:db_dependency):
+@router.get("/{patient_id}/get-all-symptoms",response_model=AllSymptoms,dependencies=[])
+async def get_all_symtoms_(patient_id:UUID,session:db_dependency,current_user:User=only_doctors):
+    
+    
     patient = await patient_services.get(patient_id,session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
+    doctor = await doctor_services.get_by_user_id(current_user.id,session)
+    if patient.doctor_id !=doctor.id:
+        raise HTTPException(
+            detail='Not allow to see patient informations',status_code=403
+        )
     all_symtons=await patient_services.get_all_symptoms(patient.id,session)
     
     return all_symtons
@@ -79,30 +87,45 @@ async def get_patient(patient_id:UUID,session:db_dependency):
 
 
 
-@router.post("/{patient_id}/add-general-symptoms",response_model=GeneralSymptomsOut,dependencies=[only_admins])
-async def add_general_symp(patient_id:UUID,data:GeneralSymptomsBase,session:db_dependency):
+@router.post("/{patient_id}/add-general-symptoms",response_model=GeneralSymptomsOut,dependencies=[])
+async def add_general_symp(patient_id:UUID,data:GeneralSymptomsBase,session:db_dependency,current_user:User=only_doctors):
     patient = await patient_services.get(patient_id,session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
+    doctor = await doctor_services.get_by_user_id(current_user.id,session)
+    if patient.doctor_id !=doctor.id:
+        raise HTTPException(
+            detail='Not allow to modify patient information',status_code=403
+        )
     gs= await patient_services.add_general_symptoms(GeneralSymptomsCreate(**data.model_dump(),patient_id=patient.id),session)
     await session.commit()
     return gs
 
 
-@router.post("/{patient_id}/add-specific-symptoms",response_model=SpecificSymptomsOut,dependencies=[only_admins])
-async def add_specific_symp(patient_id:UUID,data:SpecificSymptomsBase,session:db_dependency):
+@router.post("/{patient_id}/add-specific-symptoms",response_model=SpecificSymptomsOut,dependencies=[])
+async def add_specific_symp(patient_id:UUID,data:SpecificSymptomsBase,session:db_dependency,current_user:User=only_doctors):
     patient = await patient_services.get(patient_id,session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
+    doctor = await doctor_services.get_by_user_id(current_user.id,session)
+    if patient.doctor_id !=doctor.id:
+        raise HTTPException(
+            detail='Not allow to modify patient information',status_code=403
+        )
     ss= await patient_services.add_specific_symptoms(SpecificSymptomsCreate(**(data.model_dump()),patient_id=patient.id),session)
     await session.commit()
     return ss
 
-@router.post("/{patient_id}/add-radioimage-symptoms",response_model=RadioImageOut,dependencies=[only_admins])
-async def add_radio_image(patient_id:UUID,data:RadioImageBase,session:db_dependency):
+@router.post("/{patient_id}/add-radioimage-symptoms",response_model=RadioImageOut,dependencies=[])
+async def add_radio_image(patient_id:UUID,data:RadioImageBase,session:db_dependency,current_user:User=only_doctors):
     patient = await patient_services.get(patient_id,session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
+    doctor = await doctor_services.get_by_user_id(current_user.id,session)
+    if patient.doctor_id !=doctor.id:
+        raise HTTPException(
+            detail='Not allow to modify patient information',status_code=403
+        )
     rd= await patient_services.add_radio_image(RadioImageCreate(**data.model_dump(),patient_id=patient.id),session)
     await session.commit()
     return rd
@@ -112,16 +135,16 @@ async def add_radio_image(patient_id:UUID,data:RadioImageBase,session:db_depende
 async def associate(patient_id:UUID,doctor_id:UUID,session:db_dependency):
     patient = await patient_services.get(patient_id,session)
     if not patient :
-        raise HTTPException(detail='Patient is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
     doctor =await doctor_services.get(doctor_id,session)
     if not doctor :
-        raise HTTPException(detail='Doctor is not exist.',status_code=status.HTTP_404_NOT_FOUND)
+        raise HTTPException(detail='Doctor is not found.',status_code=status.HTTP_404_NOT_FOUND)
     patient = await patient_services.associate_to_doctor(patient,doctor_id,session)
     await session.commit()
     await session.refresh(patient)
     return patient
 
-@router.put("/{id}",response_model=PatientOut)
+@router.put("/{id}",response_model=PatientOut,dependencies=[only_admins])
 async def update(id:UUID,data:PatientUpdate,session:db_dependency):
     patient = await patient_services.get(id,session)
     if not patient :

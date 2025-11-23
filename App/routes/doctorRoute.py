@@ -8,12 +8,12 @@ from ..schemas.UserSchemas import UserCreate
 from ..schemas.DoctorSchemas import DoctorCreate,DoctorUpdate,DoctorOut
 from ..schemas.common import NewDoctor,Message
 from ..schemas.types import Role
-from ..schemas.PatientSchemas import PatientUpdateStatus,PatientOut
+from ..schemas.PatientSchemas import PatientOut
 from uuid import UUID
 from ..dependancies.common import db_dependency
 from typing import Optional,List
 from ..dependancies.auth import only_admins,only_doctors
-from ..schemas.types import Binary,Four_Classes,FinalStateEnum
+
 
 
 router = APIRouter()

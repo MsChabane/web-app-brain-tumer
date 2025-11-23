@@ -1,4 +1,4 @@
-from sqlmodel import select,SQLModel,delete
+from sqlmodel import select,SQLModel,delete,desc
 from sqlalchemy.orm import selectinload
 from ..db.db import AsyncSession
 import  asyncio
@@ -148,15 +148,15 @@ class PatientServices():
         return result.all()
     
     async def _get_all_general_symp_for(self,patient_id:str,session:AsyncSession):
-        gen_stmt = select(GeneralSymptoms).where(GeneralSymptoms.patient_id == patient_id)
+        gen_stmt = select(GeneralSymptoms).where(GeneralSymptoms.patient_id == patient_id).order_by(desc(GeneralSymptoms.created_at))
         return  (await session.exec(gen_stmt)).all()
     
     async def _get_all_specific_symp_for(self,patient_id:str,session:AsyncSession):
-        spec_stmt = select(SpecificSymptoms).where(SpecificSymptoms.patient_id == patient_id)
+        spec_stmt = select(SpecificSymptoms).where(SpecificSymptoms.patient_id == patient_id).order_by(desc(SpecificSymptoms.created_at))
         return  (await session.exec(spec_stmt)).all()
     
     async def _get_all_radio_images_for(self,patient_id:str,session:AsyncSession):
-        img_stmt = select(RadioImage).where(RadioImage.patient_id == patient_id)
+        img_stmt = select(RadioImage).where(RadioImage.patient_id == patient_id).order_by(desc(RadioImage.created_at))
         return (await session.exec(img_stmt)).all()
     
     

@@ -42,6 +42,23 @@ body {
     background: #6a82fb;
 }
 
+.sidebar-spacer {
+    flex-grow: 1;
+}
+
+.logout-btn {
+    margin: 20px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: #6a82fb;
+    color: #fff;
+}
+
+.logout-btn:hover {
+    background: #526df8;
+}
+
 /* Main content */
 .main-content {
     flex: 1;

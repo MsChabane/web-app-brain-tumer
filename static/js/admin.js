@@ -26,6 +26,9 @@ tabLinks.forEach((link) => {
 			fill_table_patients_no_assoc();
 			fill_list_doctors();
 		}
+		if (tabId === "profile-tab") {
+			fill_user_info();
+		}
 	});
 });
 
@@ -256,6 +259,20 @@ async function fill_table_patients_no_assoc() {
 	);
 }
 
+async function fill_user_info() {
+	await _call(
+		"/auth/profile",
+		"GET",
+		undefined,
+		(data) => {
+			console.log(data);
+			document.getElementById("user-phone").innerHTML = data.phone_number;
+			document.getElementById("user-role").innerHTML = data.role;
+		},
+		() => {}
+	);
+}
+
 async function submitPatient() {
 	const name = document.getElementById("patient-name").value;
 	const surname = document.getElementById("patient-surname").value;
@@ -393,6 +410,51 @@ async function submitAdmin() {
 			spinner.style.display = "none";
 			closeModal("add-admin-modal");
 			document.getElementById("admin-phone").value = "";
+		},
+		() => {
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+		}
+	);
+}
+
+async function change_password() {
+	const new_password = document.getElementById("new-password").value.trim();
+	const confirm_password = document
+		.getElementById("confirm-password")
+		.value.trim();
+	if (!new_password || !confirm_password) {
+		showNotification("Please fill all fields!");
+		return;
+	}
+	if (new_password !== confirm_password) {
+		showNotification("Passords miss match!");
+		return;
+	}
+
+	const btn = document.getElementById("submit-changepwd-btn");
+	const text = document.getElementById("changepwd-submit-text");
+	const spinner = document.getElementById("changepwd-submit-spinner");
+
+	btn.disabled = true;
+	text.style.display = "none";
+	spinner.style.display = "inline-block";
+
+	await _call(
+		"/auth/user/change-password",
+		"POST",
+		{
+			password: new_password,
+		},
+		(data) => {
+			showNotification("Password Changed !", true);
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+			closeModal("change-password-modal");
+			document.getElementById("new-password").value = "";
+			document.getElementById("confirm-password").value;
 		},
 		() => {
 			btn.disabled = false;
@@ -621,4 +683,9 @@ function openDeleteModal(message, id, type) {
 
 function closeDeleteModal() {
 	document.getElementById("delete-confirm-modal").style.display = "none";
+}
+
+function logout() {
+	localStorage.clear();
+	window.location.href = "/auth/login";
 }

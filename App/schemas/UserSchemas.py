@@ -2,6 +2,9 @@ from pydantic import BaseModel,field_validator
 import re
 from uuid import UUID
 
+
+
+
 class UserBase(BaseModel):
     phone_number:str
     @field_validator("phone_number")
@@ -16,11 +19,10 @@ class UserBase(BaseModel):
 class UserLogin(UserBase):
     password:str
     
-    
 
 class UserUpdate(BaseModel):
     password:str
-
+    
 
 class UserCreate(UserLogin):
     role:str

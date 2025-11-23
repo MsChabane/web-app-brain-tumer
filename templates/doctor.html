@@ -10,11 +10,17 @@
 </head>
 
 <body>
-  <div class="notifications" id="notifications"></div>
   <div class="sidebar">
     <h2>UStay Doctor</h2>
     <a href="#" class="tab-link active" data-tab="patients">Patients</a>
     <a href="#" class="tab-link" data-tab="checks">Checks</a>
+    <a href="#" class="tab-link" data-tab="profile">Profile</a>
+    <div class="sidebar-spacer"></div>
+
+
+    <button class="logout-btn" onclick="logout()">
+      Logout
+    </button>
   </div>
 
   <div class="main-content">
@@ -26,22 +32,24 @@
         <h2>Patients</h2>
 
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Antecedents</th>
-            <th>Tumor Status</th>
-            <th>Hospitalisation</th>
-            <th>Final State</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="patients-table">
-        </tbody>
-      </table>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patients-table">
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Checks Tab -->
@@ -50,26 +58,41 @@
 
         <h2>Checks</h2>
       </div>
-      <table>
-        <thead>
-          <tr>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
 
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Antecedents</th>
-            <th>Tumor Status</th>
-            <th>Hospitalisation</th>
-            <th>Final State</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="checks-table">
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="checks-table">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <!-- profile Tab -->
+    <div class="tab-content" id="profile-tab" style="display:none;">
+      <div class="header">
+        <h2>Profile</h2>
+      </div>
 
+      <div class="profile-info" style="margin-bottom: 20px;">
+        <p><strong>Phone Number:</strong> <span id="user-phone"> - </span></p>
+        <p><strong>Role:</strong> <span id="user-role"> - </span></p>
+      </div>
+
+      <button class="btn-update" id="change-password-btn" onclick="openModal('change-password-modal')">Change
+        Password</button>
+    </div>
 
 
     <!-- add general symptoms  -->
@@ -248,7 +271,26 @@
         </div>
       </div>
     </div>
+    <!-- Change Password Modal -->
+    <div class="modal" id="change-password-modal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-password-modal" onclick="closeModal('change-password-modal')">&times;</span>
+        <h3>Change Password</h3>
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" placeholder="Enter new password">
 
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" placeholder="Confirm new password">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-changepwd-btn" onclick="change_password()">
+            <span id="changepwd-submit-text">Submit</span>
+            <span id="changepwd-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('change-password-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
 
 </body>
 <script src="/static/js/notification.js?v={{version}}"></script>

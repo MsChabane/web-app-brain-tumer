@@ -151,3 +151,83 @@ Service class responsible for managing doctors and evaluating patients based on 
    - `muscle >= 2`
    - `swallowing >= 2`
    - `radio_image.type >= 2`
+
+# PatientServices
+
+`PatientServices` handles all patient-related operations, including patient management, symptoms tracking, radiological images, and doctor associations.
+
+---
+
+## 1. Patient Management
+
+- **`add(patient_data: PatientCreate, session: AsyncSession)`**  
+  Add a new patient to the database.
+
+- **`get(patient_id: str, session: AsyncSession) -> Patient`**  
+  Retrieve a patient by ID.
+
+- **`get_by_user_id(user_id: str, session: AsyncSession)`**  
+  Retrieve a patient using the linked user ID.
+
+- **`update(patient: Patient, new_data: PatientUpdate, session: AsyncSession)`**  
+  Update patient details (name, age, gender, antecedents, etc.).
+
+- **`update_state(patient: Patient, new_state: PatientUpdateStatus, session: AsyncSession)`**  
+  Update patient status (tumor status, hospitalization, final state).
+
+- **`delete(patient: Patient, session: AsyncSession)`**  
+  Delete a patient and all related general symptoms, specific symptoms, and radiological images.
+
+- **`associate_to_doctor(patient: Patient, doctor_id: str, session: AsyncSession)`**  
+  Assign a doctor to a patient.
+
+- **`get_all(session: AsyncSession, page: int = 1, limit: int = 100)`**  
+  Retrieve all patients with optional pagination.
+
+- **`get_all_for_doctor(doctor_id: str, session: AsyncSession)`**  
+  Retrieve all patients assigned to a specific doctor.
+
+- **`get_no_associated_patients(session: AsyncSession)`**  
+  Get patients without any doctor assigned.
+
+---
+
+## 2. Symptom & Image Management
+
+### Add Operations
+- `add_general_symptoms(general_symptoms_data: GeneralSymptomsCreate, session: AsyncSession)`  
+- `add_specific_symptoms(specific_symptoms_data: SpecificSymptomsCreate, session: AsyncSession)`  
+- `add_radio_image(radio_image: RadioImageCreate, session: AsyncSession)`  
+
+### Update Operations
+- `update_general_symptoms(general_symptoms: GeneralSymptoms, data: GeneralSymptomsUpdate, session: AsyncSession)`  
+- `update_specific_symptoms(specific_symptoms: SpecificSymptoms, data: SpecificSymptomsUpdate, session: AsyncSession)`  
+- `update_radio_image(radioimage: RadioImage, data: RadioImageBase, session: AsyncSession)`  
+
+### Retrieve Operations
+- `_get_latest_general_symptoms(patient_id: str, session: AsyncSession)`  
+- `_get_latest_specific_symptoms(patient_id: str, session: AsyncSession)`  
+- `_get_latest_radio_image(patient_id: str, session: AsyncSession)`  
+- `get_latest_infos(patient_id: str, session: AsyncSession)`  
+  Returns the latest general, specific, and radio image symptoms.
+
+- `get_all_symptoms(patient_id: str, session: AsyncSession)`  
+  Returns all general symptoms, specific symptoms, and radio images for a patient.
+
+---
+
+## 3. Internal Utility Methods
+
+- `_update(model: SQLModel, data: BaseModel)`  
+  Generic update helper to apply data changes to any SQLModel instance.
+
+- `_get_latest(Model: SQLModel, patient_id: str, session: AsyncSession)`  
+  Fetch the latest record of a given model for a patient.
+
+- `_get(model_id: str, model: SQLModel, session: AsyncSession)`  
+  Generic method to fetch any model by ID.
+
+- `_get_all_general_symp_for(patient_id: str, session: AsyncSession)`  
+- `_get_all_specific_symp_for(patient_id: str, session: AsyncSession)`  
+- `_get_all_radio_images_for(patient_id: str, session: AsyncSession)`  
+  Internal helpers to get all records of a specific type for a patient.

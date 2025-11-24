@@ -33,3 +33,8 @@ async_session = async_sessionmaker(
 )
 
 ```
+
+# 3.Initialize Database (`init_db`)
+-------------------------------
+
+This function creates all tables defined in the models asynchronously.

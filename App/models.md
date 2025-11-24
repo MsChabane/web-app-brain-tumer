@@ -251,3 +251,16 @@ class RadioImage(SQLModel, table=True):
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )
 ```
+**Key Points:**
+*   `id`: Unique UUID primary key.
+    
+*   `type`: Integer representing the type of radiology image.
+    
+*   `patient_id`: Links to the `Patient` model.
+    
+*   `created_at`: Timestamp when the image record is created.
+    
+**Usage Notes:**
+*   Tracks radiology images associated with patients.
+    
+*   Can be used for image management or medical analytics.

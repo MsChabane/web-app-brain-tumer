@@ -35,3 +35,14 @@ Defines Pydantic models for user data, authentication, and validation.
 | `UserUpdate` | `password: str` | Payload to update user password. |
 | `UserCreate` | Inherits `UserLogin`<br>`role: str` | Payload to create a new user with role. |
 | `UserOut` | `id: UUID`<br>`phone_number: str`<br>`role: str` | Schema for user data returned in responses. |
+
+# Doctor Schemas (`DoctorSchemas.py`)
+
+Defines Pydantic models for doctor data management.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `DoctorBase` | `name: str`<br>`specialty: str`<br>`years_experience: int` | Base schema for doctor details. |
+| `DoctorCreate` | Inherits `DoctorBase`<br>`user_id: UUID` | Payload for creating a doctor linked to a user. |
+| `DoctorUpdate` | `name: Optional[str]`<br>`specialty: Optional[str]`<br>`years_experience: Optional[int]` | Payload for updating doctor details (partial updates allowed). |
+| `DoctorOut` | Inherits `DoctorBase`<br>`id: UUID` | Schema for doctor data returned in responses. |

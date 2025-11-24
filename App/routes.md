@@ -54,3 +54,14 @@
 | `/patient/specific-symptoms/{id}` | PUT | Update specific symptoms by ID. | Returns updated `SpecificSymptomsOut`. `404` if not found. |
 | `/patient/radio-image/{id}` | PUT | Update radiology image by ID. | Returns updated `RadioImageOut`. `404` if not found. |
 | `/patient/{id}` | DELETE | Delete a patient and its user account. | Returns confirmation message `deleted`. `404` if patient not found. |
+
+
+# Main / Frontend Pages Routes
+
+| Route | Method | Purpose / Description | Response / Result |
+|-------|--------|---------------------|-----------------|
+| `/auth/login` | GET | Serve the login page. | Returns `login.html` as HTML response. |
+| `/admin` | GET | Serve the admin dashboard page. | Returns `admin.html` as HTML response. |
+| `/doctor` | GET | Serve the doctor dashboard page. | Returns `doctor.html` as HTML response. |
+| `/patient` | GET | Serve the patient dashboard page. | Returns `patient.html` as HTML response. |
+| `/details/{patient_id}` | GET | Serve the patient detail page for a given patient ID. | Returns `detail.html` as HTML response. |

@@ -230,3 +230,24 @@ class SpecificSymptoms(SQLModel, table=True):
 *   Each record represents a patient’s specific symptom assessment.
     
 *   Fields use enumerations (`Three_Classes`, `Four_Classes`, `Binary`) for standardized input.
+
+# Radio Image Model (`RadioImageModel.py`)
+
+Represents radiology images linked to patients.
+
+```python
+from sqlmodel import SQLModel, Field, Column, DateTime, func
+from uuid import uuid4, UUID
+from datetime import datetime
+from App.models.PatientModel import Patient
+
+class RadioImage(SQLModel, table=True):
+    __tablename__ = "radio_image"
+
+    id: UUID = Field(default_factory=uuid4, primary_key=True)
+    type: int
+    patient_id: UUID = Field(foreign_key="patient.id")
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
+```

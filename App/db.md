@@ -67,4 +67,4 @@ async def get_session() -> AsyncSession:  # type:ignore
     async with async_session() as session:
         yield session
 ```
-Use Depends(get_session) in FastAPI endpoints to access the database.
+Use `Depends(get_session)` in FastAPI endpoints to access the database.

@@ -46,3 +46,15 @@ Defines Pydantic models for doctor data management.
 | `DoctorCreate` | Inherits `DoctorBase`<br>`user_id: UUID` | Payload for creating a doctor linked to a user. |
 | `DoctorUpdate` | `name: Optional[str]`<br>`specialty: Optional[str]`<br>`years_experience: Optional[int]` | Payload for updating doctor details (partial updates allowed). |
 | `DoctorOut` | Inherits `DoctorBase`<br>`id: UUID` | Schema for doctor data returned in responses. |
+
+# Patient Schemas (`PatientSchemas.py`)
+
+Defines Pydantic models for patient data, status, and response formatting.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `PatientBase` | `name: str`<br>`surname: str`<br>`age: int`<br>`gender: Gender`<br>`antecedents: Four_Classes` | Base schema for patient details with age validation (1–130). |
+| `PatientCreate` | Inherits `PatientBase`<br>`user_id: UUID` | Payload for creating a patient linked to a user. |
+| `PatientUpdateStatus` | `tumor_status: Binary | None`<br>`hospitalisation: Four_Classes | None`<br>`final_state: FinalStateEnum | None` | Payload for updating patient’s clinical status. |
+| `PatientUpdate` | `name: Optional[str]`<br>`surname: Optional[str]`<br>`age: Optional[int]`<br>`gender: Optional[Gender]`<br>`antecedents: Optional[Four_Classes]` | Payload for updating patient details (partial updates allowed). |
+| `PatientOut` | Inherits `PatientBase`<br>`id: UUID`<br>`tumor_status: Binary | None`<br>`hospitalisation: Four_Classes | None`<br>`final_state: FinalStateEnum | None`<br>`doctor: DoctorOut | None` | Schema for patient data returned in responses, including assigned doctor info. |

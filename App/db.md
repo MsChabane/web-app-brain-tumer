@@ -1,12 +1,12 @@
-# Database Setup (`db.py`)
+# Database Configuration (`db.py`)
 
-This page describes the database configuration and session management for the FastAPI application using **SQLModel** and **SQLAlchemy AsyncIO**.
+This page describes the database setup and session management for the FastAPI application using **SQLModel** and **SQLAlchemy AsyncIO**.
 
 ---
 
 ## 1. Database Engine
 
-We create an asynchronous database engine using SQLAlchemy and the project’s database URL from settings.
+An asynchronous database engine is created using SQLAlchemy and the database URL from settings.
 
 ```python
 from sqlalchemy.ext.asyncio import create_async_engine
@@ -18,15 +18,18 @@ engine = create_async_engine(
 )
 ```
 
-## 2. Database Session 
-We create asyncsession .
+# 2. Async Session
+-------------
 
-```python 
-async_session = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+We define an asynchronous sessionmaker to manage database sessions.
+```python
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker
+
+async_session = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
 ```
-
-
-
-
-

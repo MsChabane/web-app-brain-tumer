@@ -119,7 +119,7 @@ from ..db.db import get_session, AsyncSession
     
 *   `get_session` is the function that provides an async database session.
 
-2. Database Dependency
+# 2. Database Dependency
 ----------------------
 ```python 
 db_dependency = Annotated[AsyncSession, Depends(get_session)]

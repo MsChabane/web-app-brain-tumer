@@ -13,3 +13,12 @@ This file defines all the enumerations used across models and schemas.
 | `Seizures` | `"M"`, `"TC"`, `"S"`, `"C"` | Represents types of seizures for general symptoms. |
 
 
+# Authentication Schemas (`authSchemas.py`)
+
+Defines Pydantic models for authentication and token handling.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `Token` | `access_token: str`<br>`type: str = 'Bearer'`<br>`role: str` | Represents an access token returned after login, including the user role. |
+| `Token_Data` | `user_id: str` | Represents the data encoded in the access token (user ID). |
+| `Change_password` | `password: str` | Represents the payload to change a user's password. |

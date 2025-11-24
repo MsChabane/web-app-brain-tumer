@@ -44,4 +44,52 @@ class AccessTokenChecker(HTTPBearer):
 *   Raises `HTTPException` if no token or invalid token is provided.
 
 
-# 2.Dependency: `acees_token_checker`
+# 2. Dependency: `acees_token_checker`
+```python
+from typing import Annotated
+from fastapi import Depends
+from ..schemas.authSchemas import Token_Data
+
+acees_token_checker = Annotated[Token_Data, Depends(AccessTokenChecker())]
+```
+# 3. Get Current User
+```python
+from ..services.UserServices import UserServices
+from ..models.UserModel import User
+from .common import db_dependency
+
+async def get_current_user(token_data: acees_token_checker, session: db_dependency) -> User:
+    user = await UserServices().get(token_data.user_id, session)
+    if not user:
+        raise HTTPException(detail='User not found', status_code=404)
+    return user
+
+current_user = Depends(get_current_user)
+
+```
+**Explanation:**
+*   Retrieves the currently authenticated user from the database.
+    
+*   Raises `404` if the user does not exist.
+
+# 4. Role-Based Access Control
+
+```python
+from fastapi import HTTPException, status
+from ..schemas.types import Role
+
+def role_required(required_role: str) -> User:
+    def wrapper(user=current_user):
+        if user.role != required_role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
+        return user
+    return wrapper
+
+only_admins = Depends(role_required(Role.ADMIN))
+only_doctors = Depends(role_required(Role.DOCTOR))
+only_patients = Depends(role_required(Role.PATIENT))
+
+```

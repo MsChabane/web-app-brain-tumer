@@ -22,3 +22,16 @@ Defines Pydantic models for authentication and token handling.
 | `Token` | `access_token: str`<br>`type: str = 'Bearer'`<br>`role: str` | Represents an access token returned after login, including the user role. |
 | `Token_Data` | `user_id: str` | Represents the data encoded in the access token (user ID). |
 | `Change_password` | `password: str` | Represents the payload to change a user's password. |
+
+
+# User Schemas (`UserSchemas.py`)
+
+Defines Pydantic models for user data, authentication, and validation.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `UserBase` | `phone_number: str` | Base schema for a user with phone number validation for Algerian numbers. |
+| `UserLogin` | Inherits `UserBase`<br>`password: str` | Payload for user login. |
+| `UserUpdate` | `password: str` | Payload to update user password. |
+| `UserCreate` | Inherits `UserLogin`<br>`role: str` | Payload to create a new user with role. |
+| `UserOut` | `id: UUID`<br>`phone_number: str`<br>`role: str` | Schema for user data returned in responses. |

@@ -90,3 +90,16 @@ Defines Pydantic models for handling radiological images of patients.
 | `RadioImageBase` | `type: int` | Base schema for radiological image type. |
 | `RadioImageCreate` | Inherits `RadioImageBase`<br>`patient_id: UUID` | Payload for adding a radiological image to a patient. |
 | `RadioImageOut` | Inherits `RadioImageBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning a radiological image, including timestamp. |
+
+# Common Schemas (`common.py`)
+
+Defines shared or utility Pydantic models used across the application.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `NewDoctor` | `doctor: DoctorBase`<br>`user: UserBase` | Payload for creating a new doctor along with the user account. |
+| `NewPatient` | `user: UserBase`<br>`patient: PatientBase` | Payload for creating a new patient along with the user account. |
+| `LatestSymptoms` | `general_symptoms: GeneralSymptomsOut | None`<br>`specific_symtoms: SpecificSymptomsOut | None`<br>`radio_image: RadioImageOut | None` | Represents the latest recorded symptoms for a patient. |
+| `AllSymptoms` | `general_symptoms: List[GeneralSymptomsOut]`<br>`specific_symtoms: List[SpecificSymptomsOut]`<br>`radio_images: List[RadioImageOut]` | Aggregates all symptoms of a patient. |
+| `Message[T]` | `message: str`<br>`data: Optional[T]` | Generic wrapper for API responses with optional data payload. |
+| `Total_insights` | `total_users: int`<br>`total_patients: int`<br>`total_doctors: int` | Holds summary statistics for dashboard insights. |

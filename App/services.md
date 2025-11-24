@@ -39,7 +39,7 @@ Service class responsible for managing **User** operations in the database.
 - **Purpose:** Fetch all users with pagination.
 - **Input:** Database session, page number, limit per page.
 - **Output:** Returns a list of `User` objects.
-
+---
 # AdminServices
 
 Service class responsible for retrieving total counts of users, doctors, and patients.

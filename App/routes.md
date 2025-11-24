@@ -14,10 +14,10 @@
 
 | Route | Method | Purpose / Description | Response / Result |
 |-------|--------|---------------------|-----------------|
-| `/total-dectors` | GET | Get total number of doctors. **Admin only.** | Returns total doctors as integer in a message object. |
-| `/total-patients` | GET | Get total number of patients. **Admin only.** | Returns total patients as integer in a message object. |
-| `/total-users` | GET | Get total number of users. **Admin only.** | Returns total users as integer in a message object. |
-| `/total` | GET | Get all totals (users, doctors, patients) in one response. **Admin only.** | Returns a `Total_insights` object containing `total_doctors`, `total_users`, and `total_patients`. |
+| `/dashboard/total-dectors` | GET | Get total number of doctors. **Admin only.** | Returns total doctors as integer in a message object. |
+| `/dashboard/total-patients` | GET | Get total number of patients. **Admin only.** | Returns total patients as integer in a message object. |
+| `/dashboard/total-users` | GET | Get total number of users. **Admin only.** | Returns total users as integer in a message object. |
+| `/dashboard/total` | GET | Get all totals (users, doctors, patients) in one response. **Admin only.** | Returns a `Total_insights` object containing `total_doctors`, `total_users`, and `total_patients`. |
 
 
  

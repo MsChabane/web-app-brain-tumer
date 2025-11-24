@@ -58,3 +58,14 @@ Defines Pydantic models for patient data, status, and response formatting.
 | `PatientUpdateStatus` | `tumor_status: Binary | None`<br>`hospitalisation: Four_Classes | None`<br>`final_state: FinalStateEnum | None` | Payload for updating patient’s clinical status. |
 | `PatientUpdate` | `name: Optional[str]`<br>`surname: Optional[str]`<br>`age: Optional[int]`<br>`gender: Optional[Gender]`<br>`antecedents: Optional[Four_Classes]` | Payload for updating patient details (partial updates allowed). |
 | `PatientOut` | Inherits `PatientBase`<br>`id: UUID`<br>`tumor_status: Binary | None`<br>`hospitalisation: Four_Classes | None`<br>`final_state: FinalStateEnum | None`<br>`doctor: DoctorOut | None` | Schema for patient data returned in responses, including assigned doctor info. |
+
+# General Symptoms Schemas (`GeneralSymptomsSchemas.py`)
+
+Defines Pydantic models for handling general symptoms of patients.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `GeneralSymptomsBase` | `headaches: Three_Classes`<br>`seizures: Seizures`<br>`fatigue: Three_Classes`<br>`drowsiness: Three_Classes`<br>`sleep_pb: Three_Classes`<br>`memory_pb: Three_Classes` | Base schema for general symptoms. |
+| `GeneralSymptomsCreate` | Inherits `GeneralSymptomsBase`<br>`patient_id: UUID` | Payload for adding general symptoms to a patient. |
+| `GeneralSymptomsOut` | Inherits `GeneralSymptomsBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning general symptoms, including timestamp. |
+| `GeneralSymptomsUpdate` | Optional fields matching `GeneralSymptomsBase` | Payload for updating general symptoms (partial updates allowed). |

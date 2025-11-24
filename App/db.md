@@ -38,3 +38,18 @@ async_session = async_sessionmaker(
 -------------------------------
 
 This function creates all tables defined in the models asynchronously.
+```python 
+from sqlmodel import SQLModel
+
+async def init_db():
+    async with engine.begin() as conn:
+        from App.models.PatientModel import Patient
+        from App.models.UserModel import User
+        from App.models.DoctorModel import Doctor
+        from App.models.GeneralSymptomsModel import GeneralSymptoms
+        from App.models.RadioImageModel import RadioImage
+        from App.models.SpecificSymptomsModel import SpecificSymptoms
+
+        await conn.run_sync(SQLModel.metadata.create_all)
+
+```

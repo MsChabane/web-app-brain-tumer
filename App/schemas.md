@@ -80,3 +80,13 @@ Defines Pydantic models for handling specific symptoms of patients.
 | `SpecificSymptomsCreate` | Inherits `SpecificSymptomsBase`<br>`patient_id: UUID` | Payload for adding specific symptoms to a patient. |
 | `SpecificSymptomsOut` | Inherits `SpecificSymptomsBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning specific symptoms, including timestamp. |
 | `SpecificSymptomsUpdate` | Optional fields matching `SpecificSymptomsBase` | Payload for updating specific symptoms (partial updates allowed). |
+
+# Radio Image Schemas (`RadioImageSchemas.py`)
+
+Defines Pydantic models for handling radiological images of patients.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `RadioImageBase` | `type: int` | Base schema for radiological image type. |
+| `RadioImageCreate` | Inherits `RadioImageBase`<br>`patient_id: UUID` | Payload for adding a radiological image to a patient. |
+| `RadioImageOut` | Inherits `RadioImageBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning a radiological image, including timestamp. |

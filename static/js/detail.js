@@ -2,6 +2,21 @@ const patient_info_table = document.getElementById("patient-info");
 const gs_table = document.getElementById("gs-table");
 const ss_table = document.getElementById("ss-table");
 const rd_table = document.getElementById("rd-table");
+function getRole() {
+	const token = localStorage.getItem("token");
+	const role = localStorage.getItem("role");
+
+	if (!token || !role) {
+		window.location.href = "/auth/login";
+		return;
+	}
+	const page = window.location.pathname.split("/").pop();
+
+	if (page !== role) {
+		window.location.href = `/${role}`;
+	}
+}
+getRole();
 
 const id = window.location.href.split("/").pop();
 fill_info();

@@ -22,7 +22,7 @@ async def total_users(session:db_dependency):
     return Message(message="total dotores",data=await admin.get_total_users(session))
 
 
-@router.get("/total",response_model=Message[Total_insights])
+@router.get("/total",response_model=Message[Total_insights],dependencies=[only_admins])
 async def get_totals(session:db_dependency):
     
     total_u = await admin.get_total_users(session)

@@ -58,4 +58,7 @@ async def init_db():
     
 *   `conn.run_sync(SQLModel.metadata.create_all)` creates all tables if they do not exist.
 
+# 4.Get Session (`get_session`)
+---------------------------
 
+Provides an asynchronous session for FastAPI routes.

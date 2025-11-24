@@ -93,3 +93,9 @@ only_doctors = Depends(role_required(Role.DOCTOR))
 only_patients = Depends(role_required(Role.PATIENT))
 
 ```
+**Explanation:**
+*   `role_required` checks if the current user has the required role.
+    
+*   Raises `403 Forbidden` if the role does not match.
+    
+*   Predefined dependencies for common roles: `only_admins`, `only_doctors`, `only_patients`.

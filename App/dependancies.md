@@ -99,3 +99,32 @@ only_patients = Depends(role_required(Role.PATIENT))
 *   Raises `403 Forbidden` if the role does not match.
     
 *   Predefined dependencies for common roles: `only_admins`, `only_doctors`, `only_patients`.
+
+# Database Dependency (`common.py`)
+
+This page describes the common database dependency used in the FastAPI application to provide **async database sessions** to endpoints.
+
+---
+
+## 1. Import Dependencies
+
+```python
+from fastapi import Depends
+from typing import Annotated
+from ..db.db import get_session, AsyncSession
+```
+*   `Depends` is used to declare FastAPI dependencies.
+    
+*   `AsyncSession` is the SQLAlchemy asynchronous session class.
+    
+*   `get_session` is the function that provides an async database session.
+
+2. Database Dependency
+----------------------
+```python 
+db_dependency = Annotated[AsyncSession, Depends(get_session)]
+```
+
+*   `db_dependency` is a **type-annotated dependency** for FastAPI endpoints.
+    
+*   Allows endpoints to automatically receive a ready-to-use `AsyncSession`

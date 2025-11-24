@@ -17,12 +17,12 @@ def test_login(fake_login_user, test_client):
 def test_create_admin_by_non_admin(client_with_auth_doctor, client_with_auth_patient):
     data = {"phone_number": "077", "password": "pass"}
 
-    # Doctor trying → forbidden
+    
     response = client_with_auth_doctor.post("/auth/create-admin", json=data)
     assert response.status_code == 403
     assert response.json().get("detail") == "Access denied"
 
-    # Patient trying → forbidden
+   
     response = client_with_auth_patient.post("/auth/create-admin", json=data)
     assert response.status_code == 403
     assert response.json().get("detail") == "Access denied"
@@ -63,10 +63,8 @@ def test_get_all_users_admin(client_with_auth_admin, mock_session, fake_user_lis
         limit=2
     )
 
-import pytest
-
 def test_profile_patient(client_with_auth_patient):
-    response = client_with_auth_patient.post("/auth/profile")
+    response = client_with_auth_patient.get("/auth/profile")
     data = response.json()
     
     assert response.status_code == 200
@@ -77,7 +75,8 @@ def test_profile_patient(client_with_auth_patient):
 
 
 def test_profile_doctor(client_with_auth_doctor):
-    response = client_with_auth_doctor.post("/auth/profile")
+    response = client_with_auth_doctor.get("/auth/profile")
+    
     data = response.json()
     
     assert response.status_code == 200
@@ -88,7 +87,7 @@ def test_profile_doctor(client_with_auth_doctor):
 
 
 def test_profile_admin(client_with_auth_admin):
-    response = client_with_auth_admin.post("/auth/profile")
+    response = client_with_auth_admin.get("/auth/profile")
     data = response.json()
     
     assert response.status_code == 200
@@ -96,3 +95,5 @@ def test_profile_admin(client_with_auth_admin):
     assert "phone_number" in data
     assert "role" in data
     assert data["role"] == "admin"
+
+

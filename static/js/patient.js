@@ -8,24 +8,18 @@ const rd_info_table = document.getElementById("radio-image-info");
 function getRole() {
 	const token = localStorage.getItem("token");
 	const role = localStorage.getItem("role");
+
 	if (!token || !role) {
 		window.location.href = "/auth/login";
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
-	console.log(page);
-	console.log(role);
+
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
-
-	// if (role === "admin" && page !== "admin") window.location.href = "admin";
-	// else if (role === "doctor" && page !== "doctor")
-	// 	window.location.href = "/doctor";
-	// else if (role === "patient" && page !== "patient")
-	// 	window.location.href = "/patient";
-	// else window.location.href = "/auth/login";
 }
+getRole();
 
 function logout() {
 	localStorage.clear();

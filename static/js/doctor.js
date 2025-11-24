@@ -7,12 +7,12 @@ function getRole() {
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
-	console.log(role);
-	console.log(page);
+
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
 }
+getRole();
 
 const tabLinks = document.querySelectorAll(".tab-link");
 const tabContents = document.querySelectorAll(".tab-content");
@@ -29,7 +29,7 @@ tabLinks.forEach((link) => {
 		if (tabId === "patients-tab") {
 			patients_table.innerHTML = ``;
 			fill_table_patients(add_patient_to_table);
-		}  else if (tabId === "profile-tab") {
+		} else if (tabId === "profile-tab") {
 			fill_user_info();
 		}
 	});
@@ -61,16 +61,16 @@ function add_patient_to_table(patient) {
             <td>${patient.hospitalisation || "-"}</td>
             <td>${patient.final_state || "-"}</td>
             <td>
-              <button class="btn-add" onclick="open_detail('${patient.id}')">View</button>
+              <button class="btn-add" onclick="open_detail('${
+								patient.id
+							}')">View</button>
             </td>`;
 	patients_table.appendChild(tr);
 }
 
-
-async function open_detail (id){
-	window.location.href=`/details/${id}`
+async function open_detail(id) {
+	window.location.href = `/details/${id}`;
 }
-
 
 async function fill_table_patients() {
 	await _call(

@@ -69,6 +69,7 @@ def client_with_auth_admin(override_token_checker):
     app.dependency_overrides.pop(get_current_user, None)
 
 
+
 @pytest.fixture
 def client_with_auth_doctor(override_token_checker):
     async def fake_user():

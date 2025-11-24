@@ -66,7 +66,7 @@ Service class responsible for retrieving total counts of users, doctors, and pat
 - **Input:** Database session.
 - **Output:** Returns total count of `Doctor` records.
 
-
+---
 # DoctorServices
 
 Service class responsible for managing doctors and evaluating patients based on their symptoms.
@@ -107,7 +107,7 @@ Service class responsible for managing doctors and evaluating patients based on 
 - **Purpose:** Evaluate a patient’s status based on latest symptoms and patient attributes.
 - **Input:** `Patient` object, `LatestSymptoms` object.
 - **Output:** `PatientUpdateStatus` if any rule matches, otherwise `None`.
-
+---
 #### Rules for Patient Evaluation
 
 1. **High Risk (Tumor = 1, Hospitalisation = 2, Final State = T):**
@@ -151,7 +151,7 @@ Service class responsible for managing doctors and evaluating patients based on 
    - `muscle >= 2`
    - `swallowing >= 2`
    - `radio_image.type >= 2`
-
+---
 # PatientServices
 
 `PatientServices` handles all patient-related operations, including patient management, symptoms tracking, radiological images, and doctor associations.

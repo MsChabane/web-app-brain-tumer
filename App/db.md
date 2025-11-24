@@ -33,7 +33,7 @@ async_session = async_sessionmaker(
 )
 
 ```
-`expire_on_commit=False` prevents objects from being expired after committing.
+* `expire_on_commit=False` prevents objects from being expired after committing.
 
 # 3.Initialize Database (`init_db`)
 -------------------------------

@@ -33,6 +33,7 @@ async_session = async_sessionmaker(
 )
 
 ```
+`expire_on_commit=False` prevents objects from being expired after committing.
 
 # 3.Initialize Database (`init_db`)
 -------------------------------
@@ -53,3 +54,8 @@ async def init_db():
         await conn.run_sync(SQLModel.metadata.create_all)
 
 ```
+*   **Imports all models** to ensure they are included in table creation.
+    
+*   `conn.run_sync(SQLModel.metadata.create_all)` creates all tables if they do not exist.
+
+

@@ -1,3 +1,5 @@
+const tabLinks = document.querySelectorAll(".tab-link");
+const tabContents = document.querySelectorAll(".tab-content");
 const patient_info_table = document.getElementById("patient-info");
 const gs_info_table = document.getElementById("general-symptoms-info");
 const ss_info_table = document.getElementById("specific-symptoms-info");
@@ -6,29 +8,46 @@ const rd_info_table = document.getElementById("radio-image-info");
 function getRole() {
 	const token = localStorage.getItem("token");
 	const role = localStorage.getItem("role");
+
 	if (!token || !role) {
 		window.location.href = "/auth/login";
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
-	console.log(page);
-	console.log(role);
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
-
-	// if (role === "admin" && page !== "admin") window.location.href = "admin";
-	// else if (role === "doctor" && page !== "doctor")
-	// 	window.location.href = "/doctor";
-	// else if (role === "patient" && page !== "patient")
-	// 	window.location.href = "/patient";
-	// else window.location.href = "/auth/login";
 }
+
+getRole()
 
 function logout() {
 	localStorage.clear();
-	window.location.href = "/login";
+	window.location.href = "/auth/login";
 }
+function openModal(id) {
+	document.getElementById(id).style.display = "flex";
+}
+function closeModal(id) {
+	document.getElementById(id).style.display = "none";
+}
+
+tabLinks.forEach((link) => {
+	link.addEventListener("click", (e) => {
+		e.preventDefault();
+		tabLinks.forEach((l) => l.classList.remove("active"));
+		link.classList.add("active");
+		const tabId = link.dataset.tab + "-tab";
+		tabContents.forEach((tc) => (tc.style.display = "none"));
+		document.getElementById(tabId).style.display = "block";
+		if (tabId === "info-tab") {
+			fill_info();
+		} else if (tabId === "profile-tab") {
+			fill_user_info();
+		}
+	});
+});
+fill_info();
 
 function fill_table_patient(patient) {
 	patient_info_table.innerHTML = `
@@ -55,7 +74,13 @@ function fill_table_patient(patient) {
             <tr>
                 <th>Tumor Status</th>
                 <td>${
-									patient.tumor_status != null ? patient.tumor_status : "-"
+									patient.tumor_status !== null
+										? `<span class='badge badge-${
+												patient.tumor_status == 0 ? "negative" : "positive"
+										  }'>${
+												patient.tumor_status == 0 ? "negative" : "positive"
+										  }<span>`
+										: "-"
 								}</td>
             </tr>
             <tr>
@@ -117,28 +142,28 @@ async function _call(uri, method, body = undefined, success, failed) {
 	}
 }
 
-_call(
-	"/patient/me",
-	"GET",
-	undefined,
-	(data) => {
-		console.log(data);
-		fill_table_patient(data);
-	},
-	() => {}
-);
-_call(
-	"patient/get-latest-symptoms",
-	"GET",
-	undefined,
-	(data) => {
-		console.log(data);
-		fill_table_general_symptoms(data.general_symptoms);
-		fill_table_specific_symptoms(data.specific_symptoms);
-		fill_table_radio_image(data.radio_image);
-	},
-	() => {}
-);
+function fill_info() {
+	_call(
+		"/patient/me",
+		"GET",
+		undefined,
+		(data) => {
+			fill_table_patient(data);
+		},
+		() => {}
+	);
+	_call(
+		"patient/get-latest-symptoms",
+		"GET",
+		undefined,
+		(data) => {
+			fill_table_general_symptoms(data.general_symptoms);
+			fill_table_specific_symptoms(data.specific_symptoms);
+			fill_table_radio_image(data.radio_image);
+		},
+		() => {}
+	);
+}
 
 function fill_table_general_symptoms(general_symptoms) {
 	if (general_symptoms) {
@@ -218,4 +243,62 @@ function fill_table_radio_image(rd_image) {
 	} else {
 		rd_info_table.innerHTML = `<tr><th> No Radio images added. </th></tr > `;
 	}
+}
+
+async function fill_user_info() {
+	await _call(
+		"/auth/profile",
+		"GET",
+		undefined,
+		(data) => {
+			document.getElementById("user-phone").innerHTML = data.phone_number;
+			document.getElementById("user-role").innerHTML = data.role;
+		},
+		() => {}
+	);
+}
+
+async function change_password() {
+	const new_password = document.getElementById("new-password").value.trim();
+	const confirm_password = document
+		.getElementById("confirm-password")
+		.value.trim();
+	if (!new_password || !confirm_password) {
+		showNotification("Please fill all fields!");
+		return;
+	}
+	if (new_password !== confirm_password) {
+		showNotification("Passords miss match!");
+		return;
+	}
+
+	const btn = document.getElementById("submit-changepwd-btn");
+	const text = document.getElementById("changepwd-submit-text");
+	const spinner = document.getElementById("changepwd-submit-spinner");
+
+	btn.disabled = true;
+	text.style.display = "none";
+	spinner.style.display = "inline-block";
+
+	await _call(
+		"/auth/user/change-password",
+		"POST",
+		{
+			password: new_password,
+		},
+		(data) => {
+			showNotification("Password Changed !", true);
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+			closeModal("change-password-modal");
+			document.getElementById("new-password").value = "";
+			document.getElementById("confirm-password").value;
+		},
+		() => {
+			btn.disabled = false;
+			text.style.display = "inline";
+			spinner.style.display = "none";
+		}
+	);
 }

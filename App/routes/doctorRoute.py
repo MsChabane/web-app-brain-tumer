@@ -8,12 +8,12 @@ from ..schemas.UserSchemas import UserCreate
 from ..schemas.DoctorSchemas import DoctorCreate,DoctorUpdate,DoctorOut
 from ..schemas.common import NewDoctor,Message
 from ..schemas.types import Role
-from ..schemas.PatientSchemas import PatientUpdateStatus,PatientOut
+from ..schemas.PatientSchemas import PatientOut
 from uuid import UUID
 from ..dependancies.common import db_dependency
 from typing import Optional,List
 from ..dependancies.auth import only_admins,only_doctors
-from ..schemas.types import Binary,Four_Classes,FinalStateEnum
+
 
 
 router = APIRouter()
@@ -25,7 +25,7 @@ patient_services=PatientServices()
 async def create_doctor(data: NewDoctor, session: db_dependency):
         if await user_services.check_user_exist(data.user.phone_number,session):
             raise HTTPException(detail='User is already exist.',status_code=400)
-        user =user_services.add(user_data=UserCreate(**data.user.model_dump(),role=Role.DOCTOR),session=session)
+        user =user_services.add(user_data=UserCreate(**data.user.model_dump(),password=data.user.phone_number,role=Role.DOCTOR),session=session)
         doctor =doctor_services.add(doctor_data=DoctorCreate(**data.doctor.model_dump(),user_id=user.id),session=session)
         await session.commit()
         return doctor
@@ -47,14 +47,12 @@ async def get_doctor_info(session:db_dependency,current_user:User=only_doctors):
 
 
 @router.get("/get-patients",response_model=List[PatientOut])
-async def get_patient_for_doctor(session:db_dependency,user:User=only_doctors):
+async def get_patients_for_doctor(session:db_dependency,user:User=only_doctors):
     doctor = await doctor_services.get_by_user_id(user.id,session)
     if not doctor:
         raise HTTPException(detail='Doctor is not found.',status_code=status.HTTP_404_NOT_FOUND)
     patients = await patient_services.get_all_for_doctor(doctor.id,session)
     return patients
-
-
 
 @router.get("/{id}",response_model=DoctorOut)
 async def get_doctor(id:UUID,session:db_dependency):
@@ -77,14 +75,12 @@ async def check(patient_id:UUID,session:db_dependency,current_user:User=only_doc
     if not patient :
         raise HTTPException(detail='Patient is not found.',status_code=status.HTTP_404_NOT_FOUND)
     doctor =await doctor_services.get_by_user_id(current_user.id,session)
-    
     if patient.doctor_id !=doctor.id  :
         raise HTTPException (detail="Not allow to check.",status_code=400)
     lts_info = await patient_services.get_latest_infos(patient_id,session)
-    if  doctor_services.to_check(patient,latest_symptoms=lts_info):
-        patient = await patient_services.update_status(patient,\
-            PatientUpdateStatus(tumor_status=Binary.ONE,hospitalisation=Four_Classes.TWO,final_state=FinalStateEnum.T),
-            session)
+    state=doctor_services.to_check(patient,latest_symptoms=lts_info)
+    if state :
+        patient = await patient_services.update_state(patient,state,session)
         await session.commit()
     return patient
 
@@ -103,7 +99,4 @@ async def delete_doctor(id:UUID,session:db_dependency):
         return Message(message='deleted')
     
     
-
-
-
 

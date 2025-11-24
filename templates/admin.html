@@ -5,8 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - UStay</title>
-  <link rel="stylesheet" href="/static/css/admin.css">
-  <link rel="stylesheet" href="/static/css/notifications.css">
+
+  <link rel="stylesheet" href="/static/css/admin.css?v={{version}}">
+  <link rel="stylesheet" href="/static/css/notifications.css?v={{version}}">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 </head>
 
 <body>
@@ -15,8 +17,16 @@
     <h2>UStay Admin</h2>
     <a href="#" class="tab-link active" data-tab="dashboard">Dashboard</a>
     <a href="#" class="tab-link" data-tab="users">Users</a>
-    <a href="#" class="tab-link" data-tab="patients">Patients</a>
     <a href="#" class="tab-link" data-tab="doctors">Doctors</a>
+    <a href="#" class="tab-link" data-tab="patients">Patients</a>
+    <a href="#" class="tab-link" data-tab="associations">Association</a>
+    <a href="#" class="tab-link" data-tab="profile">Profile</a>
+    <div class="sidebar-spacer"></div>
+
+
+    <button class="logout-btn" onclick="logout()">
+      Logout
+    </button>
   </div>
 
   <div class="main-content">
@@ -46,17 +56,20 @@
         <h2>Users</h2>
         <button class="btn-add" onclick="openModal('add-admin-modal')">Add Admin</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Phone</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody id="users-table">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Phone</th>
+              <th>Role</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="users-table">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
     <!-- Patients Tab -->
     <div class="tab-content" id="patients-tab" style="display:none;">
@@ -64,26 +77,55 @@
         <h2>Patients</h2>
         <button class="btn-add" onclick="openModal('add-patient-modal')">Add Patient</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Antecedents</th>
-            <th>Tumor Status</th>
-            <th>Hospitalisation</th>
-            <th>Final State</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="patients-table">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
+
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patients-table">
 
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <!-- Association tab -->
+    <div class="tab-content" id="associations-tab" style="display:none;">
+      <div class="header">
+        <h2>Patients </h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Antecedents</th>
+              <th>Tumor Status</th>
+              <th>Hospitalisation</th>
+              <th>Final State</th>
+              <th>Doctor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="patients-no-asso-table">
 
+
+          </tbody>
+        </table>
+      </div>
+    </div>
     <!-- Doctors Tab -->
     <div class="tab-content" id="doctors-tab" style="display:none;">
       <div class="header">
@@ -91,22 +133,37 @@
         <h2>Doctors</h2>
         <button class="btn-add" onclick="openModal('add-doctor-modal')">Add Doctor</button>
       </div>
-      <table>
-        <thead>
-          <tr>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
 
-            <th>Name</th>
-            <th>Specialty</th>
-            <th>Year of Eperiance</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="doctors-table">
+              <th>Name</th>
+              <th>Specialty</th>
+              <th>Year of Eperiance</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="doctors-table">
 
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <!-- profile Tab -->
+    <div class="tab-content" id="profile-tab" style="display:none;">
+      <div class="header">
+        <h2>Profile</h2>
+      </div>
 
+      <div class="profile-info" style="margin-bottom: 20px;">
+        <p><strong>Phone Number:</strong> <span id="user-phone"> - </span></p>
+        <p><strong>Role:</strong> <span id="user-role"> - </span></p>
+      </div>
+
+      <button class="btn-update" id="change-password-btn" onclick="openModal('change-password-modal')">Change
+        Password</button>
+    </div>
 
     <!-- add admin -->
     <div class="modal" id="add-admin-modal">
@@ -210,6 +267,7 @@
         </div>
       </div>
     </div>
+
     <!-- add doctor model -->
     <div class="modal" id="add-doctor-modal">
       <div class="modal-content">
@@ -229,9 +287,9 @@
         <input type="tel" id="doctor-phone" placeholder="+213xxxxxxxxx">
 
         <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
-          <button class="btn-add" id="submit-doctor-btn-add" onclick="submitDoctor()">
-            <span id="doctor-submit-text-add">Submit</span>
-            <span id="doctor-submit-spinner-add" class="spinner" style="display:none;"></span>
+          <button class="btn-add" id="submit-doctor-btn" onclick="submitDoctor()">
+            <span id="doctor-submit-text">Submit</span>
+            <span id="doctor-submit-spinner" class="spinner" style="display:none;"></span>
           </button>
           <button class="btn-delete" onclick="closeModal('add-doctor-modal')">Cancel</button>
         </div>
@@ -262,7 +320,27 @@
         </div>
       </div>
     </div>
+    <!-- associate-model -->
+    <div class="modal" id="associate-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('associate-modal')">&times;</span>
+        <h3>Associate patient with doctor</h3>
+        <input type="hidden" id="patient-to-associate" />
+        <label for="doctors-list">doctor</label>
+        <select id="doctors-list">
+        </select>
 
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-associate-btn" onclick="associate()">
+            <span id="associate-submit-text">Submit</span>
+            <span id="associate-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('associate-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- comfirm model -->
     <div class="modal" id="delete-confirm-modal">
       <div class="modal-content delete-modal">
         <h3 class="modal-title">Confirm Delete</h3>
@@ -277,9 +355,32 @@
         </div>
       </div>
     </div>
-  <script src="/static/js/notification.js"></script>
-    <script src="/static/js/admin.js"></script>
 
+    <div class="modal" id="change-password-modal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-password-modal" onclick="closeModal('change-password-modal')">&times;</span>
+        <h3>Change Password</h3>
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" placeholder="Enter new password">
+
+        <label for="confirm-password">Confirm New Password</label>
+        <input type="password" id="confirm-password" placeholder="Confirm new password">
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:15px;">
+          <button class="btn-add" id="submit-changepwd-btn" onclick="change_password()">
+            <span id="changepwd-submit-text">Submit</span>
+            <span id="changepwd-submit-spinner" class="spinner" style="display:none;"></span>
+          </button>
+          <button class="btn-delete" onclick="closeModal('change-password-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <script src="/static/js/notification.js?v={{version}}"></script>
+  <script src="/static/js/admin.js?v={{version}}"></script>
 </body>
 
 </html>

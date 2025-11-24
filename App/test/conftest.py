@@ -35,9 +35,7 @@ def override_session(mock_session):
     app.dependency_overrides.pop(get_session, None)
 
 
-# -----------------------------------------------------------------
-# TOKEN CHECKER OVERRIDE
-# -----------------------------------------------------------------
+
 @pytest.fixture
 def override_token_checker():
     async def fake_checker():
@@ -145,3 +143,4 @@ def fake_user_list():
 
     with patch.object(user_services, "get_all", mock):
         yield mock 
+

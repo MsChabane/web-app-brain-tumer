@@ -1,4 +1,5 @@
-from sqlmodel import select,SQLModel,delete
+from sqlmodel import select,SQLModel,delete,desc
+from sqlalchemy.orm import selectinload
 from ..db.db import AsyncSession
 import  asyncio
 from ..models.PatientModel import Patient
@@ -17,7 +18,7 @@ from ..schemas.common import LatestSymptoms,AllSymptoms
 class PatientServices():
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=10)->list[Patient]:
-        statement = select(Patient).offset((page-1)*limit).limit(limit)
+        statement = select(Patient).options(selectinload(Patient.doctor)) .offset((page-1)*limit).limit(limit)
         result = await session.exec(statement)
         return result.all() 
     
@@ -42,7 +43,7 @@ class PatientServices():
         return rd
     
     async def get_by_user_id(self,user_id:str,session:AsyncSession):
-        statement = select(Patient).where(Patient.user_id == user_id)
+        statement = select(Patient).where(Patient.user_id == user_id).options(selectinload(Patient.doctor)) 
         patient = (await session.exec(statement)).first()
         return patient
     
@@ -69,8 +70,8 @@ class PatientServices():
             setattr(model,k,v)
         return model
     
-    async def update_status(self,patient:Patient,status:PatientUpdateStatus,session:AsyncSession):
-        patient= self._update(patient,status)
+    async def update_state(self,patient:Patient,new_state:PatientUpdateStatus,session:AsyncSession):
+        patient= self._update(patient,new_state)
         session.add(patient)
         return patient
         
@@ -119,12 +120,12 @@ class PatientServices():
         )
         return (await session.exec(stmt)).first()
     
-    async def _get_latest_general_symptoms(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_general_symptoms(self,patient_id:str,session:AsyncSession)->GeneralSymptoms|None:
         return await self._get_latest(GeneralSymptoms,patient_id,session)
     
-    async def _get_latest_specific_symptoms(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_specific_symptoms(self,patient_id:str,session:AsyncSession)->SpecificSymptoms|None:
         return await self._get_latest(SpecificSymptoms,patient_id,session)
-    async def _get_latest_radio_image(self,patient_id:str,session:AsyncSession):
+    async def _get_latest_radio_image(self,patient_id:str,session:AsyncSession)->RadioImage|None:
         return await self._get_latest(RadioImage,patient_id,session)
     
                     
@@ -136,9 +137,9 @@ class PatientServices():
         )
         
         return LatestSymptoms(
-            general_symptoms=GeneralSymptomsBase(**gs.model_dump()) if gs else None,
-    specific_symtoms=SpecificSymptomsBase(**ss.model_dump()) if ss else None,
-    radio_image=RadioImageBase(**rd.model_dump()) if rd else None
+            general_symptoms=gs.model_dump() if gs else None,
+    specific_symtoms=ss.model_dump() if ss else None,
+    radio_image=rd.model_dump()  if rd else None
         ) 
     
     async def get_all(self,session:AsyncSession,page:int=1,limit:int=100):
@@ -147,15 +148,15 @@ class PatientServices():
         return result.all()
     
     async def _get_all_general_symp_for(self,patient_id:str,session:AsyncSession):
-        gen_stmt = select(GeneralSymptoms).where(GeneralSymptoms.patient_id == patient_id)
+        gen_stmt = select(GeneralSymptoms).where(GeneralSymptoms.patient_id == patient_id).order_by(desc(GeneralSymptoms.created_at))
         return  (await session.exec(gen_stmt)).all()
     
     async def _get_all_specific_symp_for(self,patient_id:str,session:AsyncSession):
-        spec_stmt = select(SpecificSymptoms).where(SpecificSymptoms.patient_id == patient_id)
+        spec_stmt = select(SpecificSymptoms).where(SpecificSymptoms.patient_id == patient_id).order_by(desc(SpecificSymptoms.created_at))
         return  (await session.exec(spec_stmt)).all()
     
     async def _get_all_radio_images_for(self,patient_id:str,session:AsyncSession):
-        img_stmt = select(RadioImage).where(RadioImage.patient_id == patient_id)
+        img_stmt = select(RadioImage).where(RadioImage.patient_id == patient_id).order_by(desc(RadioImage.created_at))
         return (await session.exec(img_stmt)).all()
     
     

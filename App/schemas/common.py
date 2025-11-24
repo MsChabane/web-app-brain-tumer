@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,ConfigDict
 from .DoctorSchemas import DoctorBase
 from typing import List,TypeVar,Generic,Optional
 from .PatientSchemas import PatientBase
-from .GeneralSymptomsSchemas import GeneralSymptomsBase
-from .SpecificSymptomsSchemas import SpecificSymptomsBase
-from .RadioImageSchemas import RadioImageBase
+from .GeneralSymptomsSchemas import GeneralSymptomsOut
+from .SpecificSymptomsSchemas import SpecificSymptomsOut
+from .RadioImageSchemas import RadioImageOut
 from .UserSchemas import UserBase
 
 
@@ -19,15 +19,16 @@ class NewPatient(BaseModel):
     
 class LatestSymptoms(BaseModel):
     
-    general_symptoms:GeneralSymptomsBase
-    specific_symtoms:SpecificSymptomsBase
-    radio_image:RadioImageBase
+    general_symptoms:GeneralSymptomsOut |None
+    specific_symtoms:SpecificSymptomsOut |None
+    radio_image:RadioImageOut |None
     
 
 class AllSymptoms(BaseModel):
-    general_symptoms:List[GeneralSymptomsBase]
-    specific_symtoms:List[SpecificSymptomsBase]
-    radio_images:List[RadioImageBase]
+    general_symptoms:List[GeneralSymptomsOut]
+    specific_symtoms:List[SpecificSymptomsOut]
+    radio_images:List[RadioImageOut]
+    model_config = ConfigDict(from_attributes=True)
 
 
 
@@ -40,3 +41,4 @@ class Total_insights(BaseModel):
     total_users:int
     total_patients:int
     total_doctors:int
+    

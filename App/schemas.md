@@ -69,3 +69,14 @@ Defines Pydantic models for handling general symptoms of patients.
 | `GeneralSymptomsCreate` | Inherits `GeneralSymptomsBase`<br>`patient_id: UUID` | Payload for adding general symptoms to a patient. |
 | `GeneralSymptomsOut` | Inherits `GeneralSymptomsBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning general symptoms, including timestamp. |
 | `GeneralSymptomsUpdate` | Optional fields matching `GeneralSymptomsBase` | Payload for updating general symptoms (partial updates allowed). |
+
+# Specific Symptoms Schemas (`SpecificSymptomsSchemas.py`)
+
+Defines Pydantic models for handling specific symptoms of patients.
+
+| Schema | Fields | Description / Usage |
+|--------|--------|-------------------|
+| `SpecificSymptomsBase` | `pressure: Four_Classes`<br>`balance_loss: Binary`<br>`judgment_degradation: Four_Classes`<br>`sense_degradation: Four_Classes`<br>`lactation: Three_Classes`<br>`swallowing: Four_Classes`<br>`muscle: Four_Classes` | Base schema for specific symptoms. |
+| `SpecificSymptomsCreate` | Inherits `SpecificSymptomsBase`<br>`patient_id: UUID` | Payload for adding specific symptoms to a patient. |
+| `SpecificSymptomsOut` | Inherits `SpecificSymptomsBase`<br>`id: UUID`<br>`created_at: datetime` | Schema for returning specific symptoms, including timestamp. |
+| `SpecificSymptomsUpdate` | Optional fields matching `SpecificSymptomsBase` | Payload for updating specific symptoms (partial updates allowed). |

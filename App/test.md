@@ -69,3 +69,99 @@ This file sets up **fixtures and mocks** for testing the FastAPI application. It
       {"id": "...", "phone_number": "0660223344", "role": "patient"}
   ]
 ```
+
+# **test_auth.py Wiki**
+
+## **Purpose**
+Tests the **authentication and user management endpoints** of the FastAPI app, including:
+
+- Login functionality
+- Role-based access control
+- Admin creation
+- User listing
+- Profile endpoints for different roles
+
+---
+
+## **Test Functions**
+
+### **1. `test_login`**
+- **Purpose:** Tests the `/auth/login` endpoint.
+- **Setup:** Uses `fake_login_user` and `test_client`.
+- **Test checks:**
+  - Status code is 200.
+  - Response contains `access_token`.
+  - User role matches the expected role (doctor in this case).
+
+---
+
+### **2. `test_create_admin_by_non_admin`**
+- **Purpose:** Ensures non-admin users **cannot create admin accounts**.
+- **Clients used:**
+  - `client_with_auth_doctor`
+  - `client_with_auth_patient`
+- **Expected outcome:** 
+  - Status code 403
+  - Error detail: `"Access denied"`
+
+---
+
+### **3. `test_create_admin_by_admin_with_user_exist`**
+- **Purpose:** Tests admin trying to create an admin when the user **already exists**.
+- **Fixtures:** `client_with_auth_admin`, `fake_user_exist_true`
+- **Expected outcome:** 
+  - Status code 400
+  - Error detail: `"User is already exist"`
+
+---
+
+### **4. `test_create_admin_by_admin`**
+- **Purpose:** Tests admin creating a new admin when the user **does not exist**.
+- **Fixtures:** `client_with_auth_admin`, `fake_user_exist_false`
+- **Expected outcome:** 
+  - Status code 201 (Created)
+
+---
+
+### **5. `test_get_all_users_admin`**
+- **Purpose:** Tests `/auth/users/all` endpoint for admin.
+- **Fixtures:** `client_with_auth_admin`, `mock_session`, `fake_user_list`
+- **Checks:**
+  - Status code 200
+  - Response is a list with correct length
+  - Ensures `user_services.get_all` is called with correct arguments (`session`, `page`, `limit`)
+
+---
+
+### **6. `test_profile_patient`**
+- **Purpose:** Tests `/auth/profile` for a **patient**.
+- **Checks:**
+  - Status code 200
+  - Response contains `id`, `phone_number`, `role`
+  - Role is `"patient"`
+
+---
+
+### **7. `test_profile_doctor`**
+- **Purpose:** Tests `/auth/profile` for a **doctor**.
+- **Checks:**
+  - Status code 200
+  - Response contains `id`, `phone_number`, `role`
+  - Role is `"doctor"`
+
+---
+
+### **8. `test_profile_admin`**
+- **Purpose:** Tests `/auth/profile` for an **admin**.
+- **Checks:**
+  - Status code 200
+  - Response contains `id`, `phone_number`, `role`
+  - Role is `"admin"`
+
+---
+
+## **Key Concepts**
+- **Role-based testing:** Separate clients simulate different user roles.
+- **Dependency overrides:** `conftest.py` fixtures replace real authentication and database calls.
+- **Use of mock data:** `fake_user_exist_true/false` and `fake_user_list` control test scenarios without touching the real database.
+- **HTTP status codes:** 200 (success), 201 (created), 400 (user exists), 403 (access denied)

@@ -198,3 +198,20 @@ Tests the **patient creation endpoints** and **role-based access control** in th
 *   **`make_fake_user()`**: Returns a fake `User` instance with `PATIENT` role.
     
 *   **`make_fake_patient(user_id)`**: Returns a fake `Patient` instance linked to a user.
+
+**Test Functions**
+------------------
+
+### **1. `test_create_patient_user_already_exists`**
+
+*   **Purpose:** Checks behavior when **creating a patient for an existing user**.
+    
+*   **Setup:**
+    *   Uses `client_with_auth_admin` (admin user)
+        
+    *   Patches `user_services.get_by_phone_number` to return an existing user
+        
+*   **Expected outcome:**
+    *   Status code 400
+        
+    *   Error message: `"User is already found."`

@@ -164,3 +164,37 @@ Tests the **authentication and user management endpoints** of the FastAPI app, i
 - **Dependency overrides:** `conftest.py` fixtures replace real authentication and database calls.
 - **Use of mock data:** `fake_user_exist_true/false` and `fake_user_list` control test scenarios without touching the real database.
 - **HTTP status codes:** 200 (success), 201 (created), 400 (user exists), 403 (access denied)
+
+
+# **test_patient.py Wiki**
+
+## **Purpose**
+Tests the **patient creation endpoints** and **role-based access control** in the FastAPI app, including scenarios where:
+
+- A patient is created with an existing user
+- Unauthorized users attempt to create a patient
+
+---
+
+## **Fixtures**
+
+### **1. `new_patient_payload`**
+- **Purpose:** Provides a **sample payload** for creating a new patient.
+- **Structure:**
+  ```json
+  {
+    "user": {"phone_number": "0777888999"},
+    "patient": {
+      "name": "Test Patient",
+      "surname": "Test",
+      "age": 25,
+      "gender": "F",
+      "antecedents": 0
+    }
+  }
+
+### **2. Helper functions**
+
+*   **`make_fake_user()`**: Returns a fake `User` instance with `PATIENT` role.
+    
+*   **`make_fake_patient(user_id)`**: Returns a fake `Patient` instance linked to a user.

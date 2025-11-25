@@ -215,3 +215,11 @@ Tests the **patient creation endpoints** and **role-based access control** in th
     *   Status code 400
         
     *   Error message: `"User is already found."`
+### **2. `test_create_patient_forbidden`**
+
+*   **Purpose:** Ensures **non-admin users cannot create a patient**.
+    
+*   **Setup:** Uses `client_with_auth_doctor` (doctor role)
+    
+*   **Expected outcome:**
+    *   Status code 403 (Forbidden)

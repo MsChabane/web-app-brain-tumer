@@ -68,3 +68,4 @@ This file sets up **fixtures and mocks** for testing the FastAPI application. It
       {"id": "...", "phone_number": "0550112233", "role": "doctor"},
       {"id": "...", "phone_number": "0660223344", "role": "patient"}
   ]
+```

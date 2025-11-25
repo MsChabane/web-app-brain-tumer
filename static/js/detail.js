@@ -10,10 +10,11 @@ function getRole() {
 		window.location.href = "/auth/login";
 		return;
 	}
-	const page = window.location.pathname.split("/").pop();
+	const splits = window.location.href.split("/");
+	const page = splits[splits.length - 2];
 
-	if (page !== role) {
-		window.location.href = `/${role}`;
+	if (page.includes("details") && role !== "doctor") {
+		window.location.href = "/auth/login";
 	}
 }
 getRole();

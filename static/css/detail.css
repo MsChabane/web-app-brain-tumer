@@ -299,3 +299,21 @@ button {
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
+
+.sub-section {
+    display: flex;
+    gap: 15px;
+}
+
+.sub-section p {
+    margin-top: 30px;
+    padding: 15px 30px;
+    background-color: #82c5ec;
+    border-radius: 15px;
+    color: rgb(26, 26, 200);
+    text-align: center;
+    max-height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

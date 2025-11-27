@@ -28,7 +28,7 @@ tabLinks.forEach((link) => {
 		document.getElementById(tabId).style.display = "block";
 		if (tabId === "patients-tab") {
 			patients_table.innerHTML = ``;
-			fill_table_patients(add_patient_to_table);
+			fill_table_patients();
 		} else if (tabId === "profile-tab") {
 			fill_user_info();
 		}
@@ -41,6 +41,7 @@ function openModal(id) {
 function closeModal(id) {
 	document.getElementById(id).style.display = "none";
 }
+fill_table_patients();
 
 function add_patient_to_table(patient) {
 	const tr = document.createElement("tr");

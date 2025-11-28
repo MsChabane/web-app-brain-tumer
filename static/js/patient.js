@@ -14,10 +14,15 @@ function getRole() {
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
+<<<<<<< HEAD
+=======
+
+>>>>>>> f002710c5797fb5aff7828bc5c162eb279d7dbeb
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
 }
+getRole();
 
 getRole()
 

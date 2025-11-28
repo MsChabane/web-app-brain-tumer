@@ -8,6 +8,7 @@ from ..schemas.types import Role
 from ..schemas.common import Message
 from typing import List ,Optional
 from uuid import UUID
+from ..models.UserModel import User
 
 from ..utils import create_token,checkpwd
 
@@ -57,7 +58,7 @@ async def change_password(data:UserUpdate,session:db_dependency,user=current_use
     return Message(message='Password Changed')
 
 @router.delete("/users/admin/{user_id}",dependencies=[],response_model=Message[None])
-async def delete_admin(user_id:UUID,session:db_dependency,current_user=only_admins):
+async def delete_admin(user_id:UUID,session:db_dependency,current_user:User=only_admins):
     user =await user_services.get(user_id=user_id,session=session)
     if user is None :
         raise HTTPException(
@@ -67,7 +68,7 @@ async def delete_admin(user_id:UUID,session:db_dependency,current_user=only_admi
         raise HTTPException(
             detail='User is not admin.',status_code=400
         )
-    if user.id == current_user.id:
+    if user.id == current_user.id :
         raise HTTPException(
             detail="Can't delete yourself.",status_code=400
         )

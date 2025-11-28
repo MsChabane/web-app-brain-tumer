@@ -2,6 +2,23 @@ const patient_info_table = document.getElementById("patient-info");
 const gs_table = document.getElementById("gs-table");
 const ss_table = document.getElementById("ss-table");
 const rd_table = document.getElementById("rd-table");
+const rule = document.getElementById("rule");
+function getRole() {
+	const token = localStorage.getItem("token");
+	const role = localStorage.getItem("role");
+
+	if (!token || !role) {
+		window.location.href = "/auth/login";
+		return;
+	}
+	const splits = window.location.href.split("/");
+	const page = splits[splits.length - 2];
+
+	if (page.includes("details") && role !== "doctor") {
+		window.location.href = "/auth/login";
+	}
+}
+getRole();
 
 const id = window.location.href.split("/").pop();
 fill_info();
@@ -615,7 +632,14 @@ async function check() {
 		undefined,
 		(data) => {
 			showNotification("Patient is checked!", true);
-			fill_table_patient(data);
+			if (data.result) {
+				fill_table_patient(data.result);
+			}
+			rule.innerHTML = `
+			<span>Rule : ${data.rule_id}</span>
+			<span>${data.rule_description}</span>
+			`;
+			rule.style.display = "flex";
 			document
 				.querySelectorAll("button")
 				.forEach((btn) => (btn.disabled = false));

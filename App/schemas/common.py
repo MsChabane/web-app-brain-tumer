@@ -1,7 +1,7 @@
 from pydantic import BaseModel,ConfigDict
 from .DoctorSchemas import DoctorBase
 from typing import List,TypeVar,Generic,Optional
-from .PatientSchemas import PatientBase
+from .PatientSchemas import PatientBase,PatientOut,PatientUpdateStatus
 from .GeneralSymptomsSchemas import GeneralSymptomsOut
 from .SpecificSymptomsSchemas import SpecificSymptomsOut
 from .RadioImageSchemas import RadioImageOut
@@ -30,7 +30,10 @@ class AllSymptoms(BaseModel):
     radio_images:List[RadioImageOut]
     model_config = ConfigDict(from_attributes=True)
 
-
+class RuleCheck(BaseModel):
+    rule_id:int|None
+    rule_description:str
+    result:PatientOut|None
 
 T = TypeVar("T")
 class Message(BaseModel, Generic[T]):

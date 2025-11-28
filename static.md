@@ -1,0 +1,1 @@
+Contains all static files like css , js , favicon

@@ -70,7 +70,7 @@ class PatientServices():
             setattr(model,k,v)
         return model
     
-    async def update_state(self,patient:Patient,new_state:PatientUpdateStatus,session:AsyncSession):
+    def update_state(self,patient:Patient,new_state:PatientUpdateStatus,session:AsyncSession):
         patient= self._update(patient,new_state)
         session.add(patient)
         return patient

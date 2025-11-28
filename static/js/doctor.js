@@ -7,10 +7,15 @@ function getRole() {
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
+<<<<<<< HEAD
+=======
+
+>>>>>>> f002710c5797fb5aff7828bc5c162eb279d7dbeb
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
 }
+getRole();
 
 getRole()
 const tabLinks = document.querySelectorAll(".tab-link");
@@ -28,7 +33,11 @@ tabLinks.forEach((link) => {
 		if (tabId === "patients-tab") {
 			patients_table.innerHTML = ``;
 			fill_table_patients();
+<<<<<<< HEAD
 		}  else if (tabId === "profile-tab") {
+=======
+		} else if (tabId === "profile-tab") {
+>>>>>>> f002710c5797fb5aff7828bc5c162eb279d7dbeb
 			fill_user_info();
 		}
 	});
@@ -41,6 +50,7 @@ function openModal(id) {
 function closeModal(id) {
 	document.getElementById(id).style.display = "none";
 }
+fill_table_patients();
 
 function add_patient_to_table(patient) {
 	const tr = document.createElement("tr");
@@ -61,16 +71,16 @@ function add_patient_to_table(patient) {
             <td>${patient.hospitalisation || "-"}</td>
             <td>${patient.final_state || "-"}</td>
             <td>
-              <button class="btn-add" onclick="open_detail('${patient.id}')">View</button>
+              <button class="btn-add" onclick="open_detail('${
+								patient.id
+							}')">View</button>
             </td>`;
 	patients_table.appendChild(tr);
 }
 
-
-async function open_detail (id){
-	window.location.href=`/details/${id}`
+async function open_detail(id) {
+	window.location.href = `/details/${id}`;
 }
-
 
 async function fill_table_patients() {
 	await _call(

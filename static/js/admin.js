@@ -22,6 +22,22 @@ const patient_no_asso_table = document.getElementById("patients-no-asso-table");
 const user_table = document.getElementById("users-table");
 const doctors_list_assoc = document.getElementById("doctors-list");
 
+function getRole() {
+	const token = localStorage.getItem("token");
+	const role = localStorage.getItem("role");
+
+	if (!token || !role) {
+		window.location.href = "/auth/login";
+		return;
+	}
+	const page = window.location.pathname.split("/").pop();
+
+	if (page !== role) {
+		window.location.href = `/${role}`;
+	}
+}
+getRole();
+
 tabLinks.forEach((link) => {
 	link.addEventListener("click", (e) => {
 		e.preventDefault();

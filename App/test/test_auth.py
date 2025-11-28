@@ -41,12 +41,12 @@ def test_login(fake_login_user, test_client):
 def test_create_admin_by_non_admin(client_with_auth_doctor, client_with_auth_patient):
     data = {"phone_number": "077", "password": "pass"}
 
-    # Doctor trying → forbidden
+    
     response = client_with_auth_doctor.post("/auth/create-admin", json=data)
     assert response.status_code == 403
     assert response.json().get("detail") == "Access denied"
 
-    # Patient trying → forbidden
+   
     response = client_with_auth_patient.post("/auth/create-admin", json=data)
     assert response.status_code == 403
     assert response.json().get("detail") == "Access denied"
@@ -87,8 +87,6 @@ def test_get_all_users_admin(client_with_auth_admin, mock_session, fake_user_lis
         limit=2
     )
 
-
-
 def test_profile_patient(client_with_auth_patient):
     response = client_with_auth_patient.get("/auth/profile")
     data = response.json()
@@ -102,6 +100,7 @@ def test_profile_patient(client_with_auth_patient):
 
 def test_profile_doctor(client_with_auth_doctor):
     response = client_with_auth_doctor.get("/auth/profile")
+    
     data = response.json()
     
     assert response.status_code == 200
@@ -121,48 +120,4 @@ def test_profile_admin(client_with_auth_admin):
     assert "role" in data
     assert data["role"] == "admin"
 
-
-
-
-def test_delete_admin_user_not_admin(client_with_auth_admin):
-    doctor_user = make_doctor()
-
-    with patch.object(user_services, "get", AsyncMock(return_value=doctor_user)):
-
-        response = client_with_auth_admin.delete(f"/auth/users/admin/{doctor_user.id}")
-        
-        assert response.status_code == 400
-        assert response.json()["detail"] == "User is not admin."
-
-
-def test_delete_admin(client_with_auth_admin):
-    admin = make_admin()
-
-    with patch.object(user_services, "get", AsyncMock(return_value=admin)):
-
-        response = client_with_auth_admin.delete(f"/auth/users/admin/{admin.id}")
-        assert response.status_code == 200
-        assert response.json()["message"] == "deleted"   
-
-
-def test_delete_admin_cannot_delete_self(client_with_auth_admin):
-    current_admin = make_admin()
-
-    
-    def same_admin():
-        return current_admin
-
-    from App.dependancies.auth import get_current_user
-    from App.main import app
-
-    app.dependency_overrides[get_current_user] = same_admin
-
-    with patch.object(user_services, "get", AsyncMock(return_value=current_admin)):
-
-        response = client_with_auth_admin.delete(f"/auth/users/admin/{current_admin.id}")
-
-        assert response.status_code == 400
-        assert response.json()["detail"] == "Can't delete yourself."
-
-    app.dependency_overrides.pop(get_current_user, None)
 

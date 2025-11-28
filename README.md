@@ -1,6 +1,6 @@
 # Web application
 
-\*install Requirements by using :
+* install Requirements by using :
 
 ```bash
 pip install -r requirements.txt

@@ -6,7 +6,7 @@ from ..services.UserServices import UserServices
 from ..services.PatientServices import PatientServices
 from ..schemas.UserSchemas import UserCreate
 from ..schemas.DoctorSchemas import DoctorCreate,DoctorUpdate,DoctorOut
-from ..schemas.common import NewDoctor,Message
+from ..schemas.common import NewDoctor,Message,RuleCheck
 from ..schemas.types import Role
 from ..schemas.PatientSchemas import PatientOut
 from uuid import UUID
@@ -69,7 +69,7 @@ async def update_doctor(id:UUID,data:DoctorUpdate,session:db_dependency):
     return doctor 
 
 
-@router.post("/check/{patient_id}",response_model=PatientOut )
+@router.post("/check/{patient_id}",response_model=RuleCheck )
 async def check(patient_id:UUID,session:db_dependency,current_user:User=only_doctors) :
     patient =await patient_services.get(patient_id,session)
     if not patient :
@@ -78,11 +78,16 @@ async def check(patient_id:UUID,session:db_dependency,current_user:User=only_doc
     if patient.doctor_id !=doctor.id  :
         raise HTTPException (detail="Not allow to check.",status_code=400)
     lts_info = await patient_services.get_latest_infos(patient_id,session)
-    state=doctor_services.to_check(patient,latest_symptoms=lts_info)
-    if state :
-        patient = await patient_services.update_state(patient,state,session)
+    check=doctor_services.to_check(patient,latest_symptoms=lts_info)
+    if check['rule_id'] :
+        patient = patient_services.update_state(patient,check['result'],session)
         await session.commit()
-    return patient
+    patient_out = PatientOut(
+         **patient.model_dump(),  
+            doctor=DoctorOut(**patient.doctor.model_dump())  
+        )
+    check['result']=patient_out
+    return RuleCheck(**check)
 
 
 

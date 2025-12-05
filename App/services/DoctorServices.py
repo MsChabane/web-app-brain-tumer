@@ -197,7 +197,11 @@ class DoctorServices:
         return {
             "rule_id": None,
             "rule_description": "No predefined clinical rule matched the patient symptoms.",
-            "result": None
+            "result": PatientUpdateStatus(
+                    tumor_status=None,
+                    hospitalisation=None,
+                    final_state=None
+                )
         }
 
 

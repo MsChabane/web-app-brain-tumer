@@ -244,7 +244,7 @@ function add_user_to_table(user) {
 async function fill_table_users() {
 	user_table.innerHTML = "";
 	await _call(
-		"/auth/users/all",
+		"/auth/users/all?limit=100",
 		"GET",
 		undefined,
 		(data) => {
@@ -256,7 +256,7 @@ async function fill_table_users() {
 async function fill_table_doctors() {
 	doctor_table.innerHTML = "";
 	await _call(
-		"/doctor/all",
+		"/doctor/all?page=1&limit=100",
 		"GET",
 		undefined,
 		(data) => {

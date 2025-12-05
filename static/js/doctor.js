@@ -7,17 +7,13 @@ function getRole() {
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
-<<<<<<< HEAD
-=======
 
->>>>>>> f002710c5797fb5aff7828bc5c162eb279d7dbeb
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
 }
 getRole();
 
-getRole()
 const tabLinks = document.querySelectorAll(".tab-link");
 const tabContents = document.querySelectorAll(".tab-content");
 const patients_table = document.getElementById("patients-table");
@@ -33,17 +29,12 @@ tabLinks.forEach((link) => {
 		if (tabId === "patients-tab") {
 			patients_table.innerHTML = ``;
 			fill_table_patients();
-<<<<<<< HEAD
-		}  else if (tabId === "profile-tab") {
-=======
 		} else if (tabId === "profile-tab") {
->>>>>>> f002710c5797fb5aff7828bc5c162eb279d7dbeb
 			fill_user_info();
 		}
 	});
 });
 
-fill_table_patients();
 function openModal(id) {
 	document.getElementById(id).style.display = "flex";
 }

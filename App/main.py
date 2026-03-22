@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.requests import Request
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.responses import HTMLResponse,RedirectResponse,FileResponse
 from fastapi.staticfiles import StaticFiles
 from .routes.authRoute import router as authrouter
 from .routes.dashbordRoute import router as dashrouter
@@ -23,7 +23,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 
 _version_ ="0.1.0"
 
-app= FastAPI(version=_version_,description=" ")
+app= FastAPI(version=_version_,description=" ",swagger_ui_parameters={
+        "favicon": "/static/favicon.ico"
+    })
 
 template = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
 
@@ -49,6 +51,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 def helth():
     return RedirectResponse(url="/auth/login")
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse(BASE_DIR / "static" / "favicon.ico")
 
 
 @app.get('/auth/login',response_class=HTMLResponse)

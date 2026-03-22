@@ -79,9 +79,9 @@ async def check(patient_id:UUID,session:db_dependency,current_user:User=only_doc
         raise HTTPException (detail="Not allow to check.",status_code=400)
     lts_info = await patient_services.get_latest_infos(patient_id,session)
     check=doctor_services.to_check(patient,latest_symptoms=lts_info)
-    if check['rule_id'] :
-        patient = patient_services.update_state(patient,check['result'],session)
-        await session.commit()
+    
+    patient = patient_services.update_state(patient,check['result'],session)
+    await session.commit()
     patient_out = PatientOut(
          **patient.model_dump(),  
             doctor=DoctorOut(**patient.doctor.model_dump())  

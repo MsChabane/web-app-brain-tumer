@@ -1,3 +1,19 @@
+function getRole() {
+	const token = localStorage.getItem("token");
+	const role = localStorage.getItem("role");
+
+	if (!token || !role) {
+		window.location.href = "/auth/login";
+		return;
+	}
+	const page = window.location.pathname.split("/").pop();
+	if (page !== role) {
+		window.location.href = `/${role}`;
+	}
+}
+
+getRole();
+
 const tabLinks = document.querySelectorAll(".tab-link");
 const tabContents = document.querySelectorAll(".tab-content");
 const doctor_table = document.getElementById("doctors-table");
@@ -228,7 +244,7 @@ function add_user_to_table(user) {
 async function fill_table_users() {
 	user_table.innerHTML = "";
 	await _call(
-		"/auth/users/all",
+		"/auth/users/all?limit=100",
 		"GET",
 		undefined,
 		(data) => {
@@ -240,7 +256,7 @@ async function fill_table_users() {
 async function fill_table_doctors() {
 	doctor_table.innerHTML = "";
 	await _call(
-		"/doctor/all",
+		"/doctor/all?page=1&limit=100",
 		"GET",
 		undefined,
 		(data) => {

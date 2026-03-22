@@ -1,3 +1,27 @@
+from App.routes.authRoute import user_services
+import uuid
+from unittest.mock import patch,AsyncMock
+import pytest
+from App.models.UserModel import User
+from App.schemas.types import Role
+
+
+def make_admin(id=None):
+    return User(
+        id=id or uuid.uuid4(),
+        phone_number="0550123456",
+        password="hashed",
+        role=Role.ADMIN
+    )
+def make_doctor(id=None):
+    return User(
+        id=id or uuid.uuid4(),
+        phone_number="0550123456",
+        password="hashed",
+        role=Role.DOCTOR
+    )
+
+
 
 
 def test_login(fake_login_user, test_client):

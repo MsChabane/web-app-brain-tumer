@@ -14,12 +14,13 @@ function getRole() {
 		return;
 	}
 	const page = window.location.pathname.split("/").pop();
-
 	if (page !== role) {
 		window.location.href = `/${role}`;
 	}
 }
 getRole();
+
+getRole()
 
 function logout() {
 	localStorage.clear();

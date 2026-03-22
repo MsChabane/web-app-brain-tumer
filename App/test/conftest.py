@@ -144,3 +144,4 @@ def fake_user_list():
 
     with patch.object(user_services, "get_all", mock):
         yield mock 
+

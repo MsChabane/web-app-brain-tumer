@@ -636,7 +636,7 @@ async function check() {
 				fill_table_patient(data.result);
 			}
 			rule.innerHTML = `
-			<span>Rule : ${data.rule_id}</span>
+		${ data.rule_id ?`<span>Rule : ${data.rule_id}</span>`:''}
 			<span>${data.rule_description}</span>
 			`;
 			rule.style.display = "flex";
